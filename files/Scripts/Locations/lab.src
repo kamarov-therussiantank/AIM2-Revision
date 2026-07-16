@@ -1,0 +1,73 @@
+#include "include\AIM.src"
+
+void proc OnEnterBuild(char item)
+{
+	if (item=="B_LAB_EXIT")
+		MoveToLocation("location11", "B_L11_ARLINGLAB"); 
+}
+
+
+void proc OnEnterLocation(char sLoc)
+{
+	ChangeObjectID("B_LAB_CONSOLE", "STN_TEH_LAB_CONSOLE_NA");	//Для подгрузки
+	ChangeObjectID("B_LAB_CONSOLE", "STN_TEH_LAB_CONSOLE_OFF");
+	ChangeObjectID("B_LAB_EXIT", "BLD_U_LAB_BOT_PAD_OFF");
+	SetSensor("LAB_POINT1");
+
+	InstallEquipLayer(EQIP_CONFIG, "CFG_BOT");
+	AddAmount(AMOUNT_ENERGY, 50);
+}
+
+
+void proc OnEnterSensor(char item)
+{
+	switch (item)
+	{
+		case "LAB_POINT1": 
+		{  
+			ChangeObjectID("B_LAB_CONSOLE", "STN_TEH_LAB_CONSOLE");
+			ChangeObjectID("B_LAB_EXIT", "BLD_U_LAB_BOT_PAD");
+			SetTimer("MessageConsole", 0.02);
+			SetTimer("MessageTranslate", 0.005);
+			DeleteObject("LAB_POINT1");
+		}
+	}
+}
+
+void proc MessageTranslate()
+{
+	Text("MSG_L11_LAB_INTERP");
+}
+
+void proc MessageConsole()
+{
+	ClearLog();
+	SetCaptureInterface(1);
+	Dialog("MSG_L11_LAB_MON1");
+}
+
+void proc ConsoleDisallow()
+{
+	ChangeObjectID("B_LAB_CONSOLE", "STN_TEH_LAB_CONSOLE_NA");
+}
+
+void proc ConsoleEnable()
+{
+	ChangeObjectID("B_LAB_CONSOLE", "STN_TEH_LAB_CONSOLE");
+}
+
+void proc MessageConsole2()
+{
+	ClearLog();
+	Dialog("MSG_L11_LAB_MON2");
+	SetMsgJ("INFO_INTOLAB");
+	SetTimer("ConsoleEnable", 0.1);
+}
+
+void proc D_LAB_Q1_1()
+{
+	SetCaptureInterface(0);
+	SetTimer("MessageConsole2", 0.04);
+	SetTimer("ConsoleDisallow", 0.002);
+	SetTimer("MessageTranslate", 0.005);
+}

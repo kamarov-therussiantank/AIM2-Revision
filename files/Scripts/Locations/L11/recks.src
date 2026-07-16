@@ -1,0 +1,25 @@
+#include "include\AIM.cpp"
+
+void proc OnTryConvict(char cMech)
+{
+	MechSay(cMech, "MSG_T4_L11_CONVICT");
+	return;
+}
+
+void proc OnKill(char cMech)
+{
+   MechSay(cMech, "MSG_T4_L11_KILL");
+}
+
+void proc OnPlayerMechCommit(char MechID, char buildID)
+{
+	char sID;
+	sID = "AIM.RECK04."+MechID;
+	
+	if (GetVarChar(sID)=="")
+	{
+		SetVarChar(sID, "=green");
+		SetVar("AIM.RECK04.NUM", GetVar("AIM.RECK04.NUM")+1);
+		Text("MSG_T4_L11_BUILD");
+	}
+}

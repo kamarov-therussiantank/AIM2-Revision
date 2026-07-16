@@ -1,0 +1,58 @@
+#include "include\AIM.src"
+
+void proc OnEnterBuild(char cItem)
+{
+	// первое общение
+	if (GetVar("AIM.NET.SIN.1") && !GetVar("AIM.NET.SIN.2"))
+	{
+		SetCaptureInterface(1);
+		Text("TS_L7_TEXT1_1");
+	}
+
+	// Подгоням игрока пообщаться с наутилусом
+	if (GetVar("AIM.NET.SIN.2") && !GetVar("AIM.NET.SIN.4"))
+		Text("TS_L7_Q1_11");
+
+	// Пока сообщение не расшифровано - пдгоняем игрока расшифровать его
+	if (GetVar("AIM.NET.SIN.4") && !GetVar("AIM.NET.SIN.5"))
+		Text("TS_L7_Q1_12");
+
+	// Когда сообщение расшифровано, но пока осталось время - посылаем ирока
+	if (GetVar("AIM.NET.SIN.5") && !GetVar("AIM.NAU.DESTROY"))
+		Text("TS_L7_Q1_13");
+
+	if (!GetItem("EQP_STASIS_GENERATOR"))
+		AddItem("EQP_STASIS_GENERATOR");
+  
+	// Когда время закончилось и они свободны - дарим модификатор.
+	if ( GetVar("AIM.NAU.DESTROY") && !GetVar("AIM.NET.SIN.7"))
+	{
+		Text("TS_L7_Q2_1");
+		SetQuestPart("TS_L11_J_Q1_6", "TS_L7_J_Q1_2");
+		SetMsgJ("TS_L7_J_Q1_3");
+		MarkMsgJ("TS_L7_J_Q1_3", 1);
+		MarkMsgJ("TS_L11_J_Q1_6", 2);
+		SetVar("AIM.NET.SIN.7");
+		CreateGroup("TS_ITEM6_1", "", 1);
+		SetMechGeneration("TS_ITEM6_1", 6);
+		SetMechClan("TS_ITEM6_1", "ORG_PLAYER");
+		AddItem("TS_ITEM6_1");
+	} 
+	else
+	// Если игрок опять сюда приперся - говорим - чо приперся..?
+	if (GetVar("AIM.NET.SIN.7"))
+	{
+		Text("TS_L7_Q2_3");
+	}
+}
+
+void proc Sin2()
+{
+	if (!GetVar("AIM.NET.SIN.2"))
+	{
+		SetQuestPart("TS_L11_J_Q1_6", "TS_L7_J_Q1_1");
+		SetCaptureInterface(0);
+		SetVar("AIM.NET.SIN.2");
+	}
+}
+

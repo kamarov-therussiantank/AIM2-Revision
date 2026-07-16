@@ -1,0 +1,54 @@
+#include "include\AIM.cpp"
+
+void proc OnEnterBuild(char item)
+{
+	StartScriptEvent("Events\EnterBuild.src", "OnEnterBuild", item);
+	
+	// Квест меркаторов - обследовать теппиторию
+	if (GetVar("AIM.MERC.ISQ") &&
+		GetVarChar("AIM.MERC.ACTQ")=="T_L5_MERC_08" 
+		&& GetVar("compl_merc08")==0)
+	{
+		RemoveItem("TOV_T_L5_MERC_08_CRYSTAL");
+		SetVar("compl_merc08", 2);
+		Text("T_L5_MERC_08.FAIL2");
+	}
+}
+
+
+// При выходе за пределы сенсора мы ругаемся..
+void proc OnLeaveSensor(char itemID)
+{
+	if (GetVar("AIM.MERC.ISQ") &&
+		GetVarChar("AIM.MERC.ACTQ")=="T_L5_MERC_08"  && 
+		GetVar("compl_merc08") == 0 && 
+		itemID == "B_L5_BASE1")
+	{
+		Text("T_L5_MERC_08.ALERT");
+		StopTimer("time_merc08");
+		SetSensor("B_L5_BASE1"); 
+	}
+}
+
+// Въезд в зону наблюдения квеста меркаторов
+void proc OnEnterSensor(char itemID)
+{
+	if (GetVar("AIM.MERC.ISQ") &&
+		GetVarChar("AIM.MERC.ACTQ")=="T_L5_MERC_08"  && 
+		GetVar("compl_merc08") == 0 && 
+		itemID == "B_L5_BASE1")
+	{
+		Text("MSG_T_L5_MERC_08_1");
+		SetSensor("B_L5_BASE1", 0); 
+		SetTimer("time_merc08", 0.3);
+	}
+}
+
+void proc time_merc08()
+{
+	if (GetVar("compl_merc08")==0)
+	{
+		Text("MSG_T_L5_MERC_08_2");
+		SetVar("compl_merc08", 1);
+	}
+}

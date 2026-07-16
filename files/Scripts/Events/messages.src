@@ -1,0 +1,78 @@
+#include "include\AIM.cpp"
+
+void proc OnHit(char cMech)
+{
+	StartScriptEvent("Clans\Events\Hit.src", "OnHit", cMech);
+
+	if (GetMechClan(cMech)==GetMechClan("PLAYER"))
+	{
+		MechSay(cMech, "MSG_HIT_FRIEND");
+	}
+	else
+	if (RandomInt(10)==0)
+	{
+		MechSay(cMech, "MSG_HIT");
+	}
+}
+
+// Когда механоид видит игрока
+void proc OnView(char cMech)
+{
+}
+
+// Когда механоид начинает нападать на игрока
+void proc OnAttack(char cMech)
+{
+	if (RandomInt(8)==0)
+	{
+		MechSay(cMech, "MSG_ATTACKED");
+	}
+}
+
+// Когда механоид вдруг испугался игрока
+void proc OnRetreat(char cMech)
+{
+	if (RandomInt(10)==0)
+	{
+		MechSay(cMech, "MSG_BOT_FEAR");
+	}
+}
+
+void proc OnFear(char cMech)
+{
+	if (RandomInt(20)==0)
+	{
+		MechSay(cMech, "MSG_PLAYER_FEAR");
+	}
+}
+
+void proc OnDrop(char cMech)
+{
+	if (RandomInt(16)==0)
+	{
+		MechSay(cMech, "MSG_B_DROP_1");
+	}
+}
+
+void proc OnProvocation(char cMech)
+{
+	MechSay(cMech, "MSG_PROVOCATION");
+}
+
+void proc OnRobbing(char cMech)
+{
+	MechSay(cMech, "MSG_ROBBING");
+}
+
+void proc OnAcceptConviction(char cMech)
+{
+	MechSay(cMech, "MSG_ACCEPT");
+}
+
+void proc OnPlayerAttackSafeZone(char cMech)
+{
+	if (RandomInt(10)==0)
+	{
+		MechSay(cMech, "MSG_ATTACK_ZONE");
+	}
+}

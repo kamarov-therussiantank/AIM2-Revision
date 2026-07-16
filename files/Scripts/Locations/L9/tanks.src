@@ -1,0 +1,28 @@
+#include "include\AIM.cpp"
+
+void proc OnEnterSensor(char cItem)
+{
+	switch(cItem)
+	{
+	case "L9_TANK1":
+	{
+		Text("MSG_T1_L11_TANKRUSH1");
+		SetVar("AIM.RECK01.NUM", GetVar("AIM.RECK01.NUM")+1);
+		//SetPelengPoint("L9_TANK2");
+		if (GetVar("AIM.RECK01.NUM")>=3) Text("INT_QUEST_COMPLETE");
+	}
+	case "L9_TANK2":
+	{
+		Text("MSG_T1_L11_TANKRUSH2");
+		SetVar("AIM.RECK01.NUM", GetVar("AIM.RECK01.NUM")+1);
+		if (GetVar("AIM.RECK01.NUM")>=3) Text("INT_QUEST_COMPLETE");
+	   // SetPelengPoint("L9_TANK3");
+	}
+	case "L9_TANK3":
+	{
+		Text("MSG_T1_L11_TANKRUSH3");
+		SetVar("AIM.RECK01.NUM", GetVar("AIM.RECK01.NUM")+1);
+		if (GetVar("AIM.RECK01.NUM")>=3) Text("INT_QUEST_COMPLETE");
+	}
+	}
+}

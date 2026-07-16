@@ -1,0 +1,57 @@
+#include "include\AIM.src"
+
+void proc OnEnterLocation(char item)
+{
+	StartScriptEvent("Events\EnterLocation.src", "OnEnterLocation", item);
+
+	if (!GetVar("AIM.NAU.CREATED"))
+	{
+		StartScriptEvent("Events\Sinigrs.src", "OnEnterLocation", item);
+		StartScriptEvent("Events\Defenders.src", "OnEnterLocation", item);
+		SetPelengPoint("B_L11_ARLINGLAB");
+		CreateGroup("TS_GRP_NAUTILUS");
+		SetMechGeneration("TS_GRP_NAUTILUS", 8);
+		SetVar("AIM.NAU.CREATED");
+		// SetPelengPoint("TS_GRP_NAUTILUS");
+
+		CreateGroup("DERCINT");
+		SetMechGeneration("DERCINT", 4);
+		SetMechClan("DERCINT", "ORG_RECONERS");
+		SetRelation("DERCINT", "PLAYER", 10);
+		
+		SetClanRelation("ORG_SENTINELS", "ORG_ARHEYS", -10);
+		SetClanRelation("ORG_PLAYER", "ORG_ARHEYS", -10);
+		SetClanRelation("ORG_SENTINELS", "ORG_PLAYER", 100);
+
+	}
+	SetTimer("OnWorldTimeProcess", 0.5);
+}
+
+void proc OnWorldTimeProcess(char item)
+{
+	
+	// The Sentinels relation towards other clans, and likewise
+	SetClanRelation("ORG_SENTINELS", "ORG_ARHEYS", -10);
+	SetClanRelation("ORG_SENTINELS", "ORG_FINDERS", -10);
+	SetClanRelation("ORG_SENTINELS", "ORG_MORFS", -10);
+	SetClanRelation("ORG_SENTINELS", "ORG_PLAYER", 100);
+
+	
+	// The Arheys relation towards other clans, and likewise
+	SetClanRelation("ORG_ARHEYS", "ORG_FINDERS", -10);
+	SetClanRelation("ORG_ARHEYS", "ORG_MORFS", -10);
+	SetClanRelation("ORG_ARHEYS", "ORG_SENTINELS", -10);
+
+	
+	SetTimer("OnWorldTimeProcess2", 0.5);
+}
+
+void proc OnWorldTimeProcess2(char item)
+{
+	SetTimer("OnWorldTimeProcess", 0.5);
+}
+
+void proc OnHour(char locID)
+{
+	ThrowGoodsOnRoad("TOV_FUNGUS", 10);
+}

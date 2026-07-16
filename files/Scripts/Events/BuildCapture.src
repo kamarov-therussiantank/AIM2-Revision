@@ -1,0 +1,20 @@
+#include "include\AIM.cpp"
+
+void proc OnBuildCapture(char clanID, char BuildID)
+{
+	StartScriptEvent("Clans\Events\BuildCapture.src", "OnBuildCapture", clanID, BuildID);
+	
+	if (!GetVar("DEMO"))
+	if (clanID=="ORG_PLAYER" && !GetVar("AIM.CLAN.CREATE"))
+	{
+		PlayVideo("Data\Video\createclan.bik");
+		// TODO: здесь по идее должен быть ввод имени клана...
+		SetVar("AIM.CLAN.CREATE");
+		//SetMsgJ("TS_L5_J_TEXT6_3");
+		Dialog("TS_L5_Q5_0");
+		//SetQuestPart("TS_L5_J_Q3_3", "TS_L5_J_TEXT6_3");
+		SetQuestPart("TS_L5_J_Q3_1", "TS_L5_J_TEXT6_3");		
+		MarkMsgJ("TS_L5_J_Q3_3", 2);
+		MarkMsgJ("TS_L5_J_Q3_1", 2);
+   }
+}

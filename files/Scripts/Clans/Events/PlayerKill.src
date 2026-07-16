@@ -1,0 +1,92 @@
+#include "include\AIM.src"
+
+void proc OnPlayerKill(char gliderID)
+{
+//---Событие срабатывает когда игрок убивает глайдер во время прохождения T_L1_ASCENDS_03---//
+	if (GetVarChar("asce_activeq") == "T_L1_ASCENDS_03" && GetGliderClan(gliderID) == "ORG_FREE" && GetVar("time_T_L1_ASCENDS_03") > 0)
+	{
+		SetVar("PLAYER_free_kill", GetVar("PLAYER_free_kill")+1);
+	}
+	//---Событие срабатывает когда игрок убивает глайдер во время прохождения T_L1_ASCENDS_04---//
+	if (GetVarChar("asce_activeq") == "T_L1_ASCENDS_04" && GetVar("asce_activeq") == 1)
+	{
+		SetVar("T_L1_ASCENDS_04_fail", 1);
+	}
+	//---Событие срабатывает когда игрок убивает глайдер во время прохождения T_L1_ASCENDS_05---//
+	if (GetVarChar("asce_activeq") == "T_L1_ASCENDS_05" && GetVar("asce_activeq") == 1)
+	{
+		SetVar("T_L1_ASCENDS_05_compl", 1);
+		SetVar("T_L1_ASCENDS_05_kills", GetVar("T_L1_ASCENDS_05_kills")+1);
+		char point;
+		char config;
+		switch(RandomInt(12))
+		{
+			case 0: 
+			{
+				point = "POINT_ARENA0";
+				config = "CFG_FORWARD_AT_HI";
+			}
+			case 1:
+			{
+				point = "POINT_ARENA1";
+				config = "CFG_SURVIVORS_AT_HI";
+			}
+			case 2:
+			{
+				point = "POINT_ARENA2";
+				config = "CFG_HIDDEN_AT_HI";
+			}
+			case 3:
+			{
+				point = "POINT_ARENA3";
+				config = "CFG_ARHEYS_AT_HI";
+			}
+			case 4:
+			{
+				point = "POINT_ARENA4";
+				config = "CFG_TOLERANS_AT_HI";
+			}
+			case 5:
+			{
+				point = "POINT_ARENA5";
+				config = "CFG_NARGOONS_AT_HI";
+			}
+			case 6:
+			{
+				point = "POINT_ARENA6";
+				config = "CFG_FIREHALF_AT_HI";
+			}
+			case 7:
+			{
+				point = "POINT_ARENA7";
+				config = "CFG_ASCENDS_AT_HI";
+			}
+			case 8:
+			{
+				point = "POINT_ARENA8";
+				config = "CFG_MORFS_AT_HI";
+			}
+			case 9:
+			{
+				point = "POINT_ARENA9";
+				config = "CFG_CALMKEEPERS_AT_HI";
+			}
+			case 10:
+			{
+				point = "POINT_ARENA0";
+				config = "CFG_FINDERS_AT_HI";
+			}
+			case 11:
+			{
+				point = "POINT_ARENA1";
+				config = "CFG_FANTOMS_AT_HI";
+			}
+			case 12:
+			{
+				point = "POINT_ARENA2";
+				config = "CFG_MERCATORS_AT_HI";
+			}
+		}//end switch
+		CreateMech(GetUniqueMechID, point, config);
+	}
+}

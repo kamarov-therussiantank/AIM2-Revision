@@ -1,0 +1,7 @@
+#include "include\AIM.cpp"
+
+void proc OnKillGroup(char GroupMechID)
+{
+	StartScriptEvent("Clans\Events\KillGroup.src", "OnKillGroup", GroupMechID);
+	//..
+}

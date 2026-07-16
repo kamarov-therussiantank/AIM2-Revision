@@ -1,0 +1,29 @@
+#include "include\AIM.src"
+
+void proc OnEnterBuild(char item)
+{
+   int iVar;
+   iVar = GetVar("first_enter_sbunker");
+   if (iVar == ERROR)
+   {
+	   Text("TS_L5_TEXT3_1");
+	  SetMsgJ("TS_L5_J_Q2_1");
+	  SetVar("first_enter_sbunker", 1);
+	}
+	else
+	{
+		Text("B_L5_SBUNKER");
+	}
+}
+
+void proc D_L5_Q2_1()
+{
+CloseText("TS_L5_TEXT3_1");  
+Text("TS_L5_Q2_1");
+}
+
+void proc CLOSE()
+{
+DeleteText("TS_L5_TEXT3_1");  
+DeleteText("TS_L5_Q2_1");
+}

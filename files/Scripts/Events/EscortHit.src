@@ -1,0 +1,25 @@
+#include "include\AIM.cpp"
+
+void proc OnEscortHit(char gliderID)
+{
+	StartScriptEvent("Clans\Events\EscortHit.src", "OnEscortHit", gliderID);
+	//..
+	int iValue;
+	  iValue = GetVar("gen_q");
+	  int assign;
+	  assign = GetVar("gen_assign");
+	  iValue = GetVar("gen_q");
+	  char glidertarget;
+	  glidertarget = GetVarChar("g_glidertarget");
+	  
+	  if (( iValue == 12 ) && (glidertarget == gliderID) && (assign == 1))
+	  {
+		Text("¿¿¿¿¿ Ã≈Õﬂ ¡‹ﬁ“...œŒÃŒ√»»»»»!");
+	}
+	
+	if (( iValue == 13 ) && (glidertarget == gliderID) && (assign == 1))
+	  {
+		Text("¿¿¿¿¿ Ã≈Õﬂ ¡‹ﬁ“...œŒÃŒ√»»»»»!");
+	}
+
+}

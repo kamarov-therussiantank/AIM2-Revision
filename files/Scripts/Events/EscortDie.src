@@ -1,0 +1,21 @@
+#include "include\AIM.cpp"
+
+void proc OnEscortDie(char gliderID)
+{
+	StartScriptEvent("Clans\Events\EscortDie.src", "OnEscortDie", gliderID);
+	//..
+	int iValue;
+	iValue = GetVar("gen_q");
+	if (( iValue == 12 || iValue==13) && GetVarChar("g_glidertarget") == gliderID && GetVar("gen_assign") == 1)
+	{
+		AssignGliderToPlayer(GetVarChar("g_glidertarget"), 0); 
+		Text("MSG_GEN_DIE");
+		Text("INT_QUEST_FAIL");
+		SetVar("gen_assign", 0);
+		SetVar("gen_q", 99);
+		RemovePeleng(GetVarChar("g_glidertarget"));
+		RemovePeleng(GetVarChar("end_poindid"));
+
+	}
+}
+

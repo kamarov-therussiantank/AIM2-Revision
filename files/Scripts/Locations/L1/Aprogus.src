@@ -1,0 +1,53 @@
+#include "include\AIM.cpp"
+
+void proc OnTryConvict(char cMech)
+{
+	if ( GetMechClan(CHAR)!="ORG_PLAYER")
+		return;
+
+	if (!GetVar("APROGUS.1"))
+	{
+		Dialog("TS_L1_Q1_1");
+		SetMsgJ("TS_L1_J_Q1_1");
+		MarkMsgJ("TS_L1_J_Q1_1", 1);
+	}
+
+	if (GetVar("G5_CONVICTED")>=7)
+	{
+		Dialog("TS_L1_Q1_4");
+		SetVar("G5_CONVICTED", GetVar("G5_CONVICTED")+1);
+		SetMechClan("TS_GRP_APROGUS", "ORG_PLAYER");
+		SetVar("AIM.APROGUS.CONVICTED");
+
+		// У нас есть еще один механоид 5-го поколения.
+		// Если этот уйдет - пусть ARHHAND станет главарем клана..
+		if (GetMechClan("ORG_ARHHAND")=="ORG_CALMKEEPERS")
+			SetClanLider("ORG_ASCENDS", "TS_GRP_ARHHAND");
+		else
+			SetClanLider("ORG_ASCENDS", "");
+
+		SetQuestPart("TS_L1_J_Q1_1", "TS_L1_J_Q1_3");
+		MarkMsgJ("TS_L1_J_Q1_1", 2);
+	}
+	else
+	{
+		if (GetVar("APROGUS.1"))
+			MechSay(cMech, "TS_L1_Q1_6");
+	}
+
+	if (!GetVar("APROGUS.1"))
+		SetVar("APROGUS.1");
+}
+
+void proc OnTalk(char cMech)
+{
+   if (GetMechClan(cMech)!="ORG_PLAYER")
+	   MechSay(cMech, "MSG_M5_TALK");
+   else
+	   MechSay(cMech, "MSG_5GEN_AFTER_PER");
+}
+
+void proc OnView(char cMech)
+{
+   SetRelation(cMech, "PLAYER", 0, 0);
+}

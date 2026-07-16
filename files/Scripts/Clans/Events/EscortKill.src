@@ -1,0 +1,16 @@
+#include "include\AIM.src"
+
+void proc OnEscortKill(char mechID)
+{
+	//---Событие срабатывает когда убивают глайдер во время прохождения T_L3_ASCENDS_04---//
+	if (GetVarChar("asce_activiq") == "T_L3_ASCENDS_04" && GetGliderR(mechID) >= 5)
+	{
+		SetVar("T_L3_ASCENDS_04_compl", GetVar("T_L3_ASCENDS_04_compl")+1);
+		if (GetVar("T_L3_ASCENDS_04_compl") >= 5 && GetVar("T_L3_ASCENDS_04_fail") == 0)
+		{
+			AssignGliderToPlayer("T4_L1_GROUP1", 0); 
+			AssignGliderToPlayer("T4_L1_GROUP2", 0); 
+			Text("Q_COMPLETE");
+		}
+	}
+}

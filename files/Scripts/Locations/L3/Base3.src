@@ -1,0 +1,17 @@
+#include "include\AIM.src"
+
+void proc OnEnterBuild(char item)
+{
+	StartScriptEvent("Events\EnterBuild.src", "OnEnterBuild", item);
+//-----------------------------¬ьезд в здание при квесте T_L5_CALMKEEPERS_04-----------//
+	char activq_calm;
+	activq_calm = GetVarChar("calm_activeq");
+	
+	if (activq_calm == "T_L5_CALMKEEPERS_04" && GetVar("T_L6_CALMKEEPERS_04_technology2") == 0)
+	{
+		SetVar("T_L6_CALMKEEPERS_04_technology2", 1);
+		Text("T_L6_CALMKEEPERS_04.NOTEND.2");
+		RemoveItem("T4_L6_KEEPERS_PAK2", 1);
+		AddItem("T4_L6_KEEPERS_PAK5", 1);
+	}
+}

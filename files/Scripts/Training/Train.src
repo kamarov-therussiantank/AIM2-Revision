@@ -1,0 +1,407 @@
+#include "include\AIM.src"
+
+void proc OnEnterBuild(char item)
+{
+	MoveToLocation("location5", "B_L5_BASE2");
+}
+
+void proc OnEnterLocation(char item)
+{
+	InstallEquipLayer(EQIP_CONFIG, "CFG_TRAIN");
+	SetTimer("EnterLoc", 0.01);
+	AddAmount(AMOUNT_ENERGY, 100);
+}
+
+void proc OnRessurrect()
+{
+  /*AddItem("AMM_FAST_BOMB", -1000);
+  AddItem("AMM_ROCKET", -1000);
+  UninstallEquipLayer(EQIP_GUN1);
+  ClearLog();*/
+}
+
+void proc EnterLoc(char cItem)
+{
+  // Output first text
+  Dialog("TR_START_TEXT");
+  // set sensor points
+  SetPelengPoint("TR_POINT1", 0);
+
+  CreateObjectAt("ARROW_P1", "ST_ARROW", "TR_POINT1");
+
+  SetSensor("TR_POINT1");
+  SetSensor("TR_KONTUR");
+  SetSensor("TR_GATEPOINT1");
+
+  SetBoundBetween("TR_GATE1", "TR_GATE2", 1);
+
+  //TODO:
+//  SetSensor("TR_START4");
+//  SetSensor("TR_START5");
+}
+
+void proc OnEnterSensor(char item)
+{
+	switch (item)
+	{
+		case "TR_POINT1": 
+		{  
+			Text("TR_POINT1_TEXT");
+			SetPelengPoint("TR_POINT2", 0);
+			SetSensor("TR_POINT2");
+			DeleteObject("ARROW_P1");
+			CreateObjectAt("ARROW_P2", "ST_ARROW", "TR_POINT2");
+		}
+		case "TR_POINT2": 
+		{  
+			Text("TR_POINT2_TEXT");
+			SetPelengPoint("TR_POINT3", 0);
+			SetSensor("TR_POINT3");
+			DeleteObject("ARROW_P2");
+			CreateObjectAt("ARROW_P3", "ST_ARROW", "TR_POINT3");
+		};
+		   case "TR_POINT3": 
+		{  
+			Text("TR_POINT3_TEXT");
+			SetPelengPoint("TR_POINT4", 0);
+			SetSensor("TR_POINT4");
+			DeleteObject("ARROW_P3");
+			CreateObjectAt("ARROW_P4", "ST_ARROW", "TR_POINT4");
+		};
+		case "TR_POINT4": 
+		{  
+			Text("TR_POINT4_TEXT");
+			SetPelengPoint("TR_GATEPOINT1", 0);
+			SetVar("TR_GATE1_PASSES", 1);
+			DeleteObject("ARROW_P4");
+			CreateObjectAt("ARROW_GATE1", "ST_ARROW", "TR_GATEPOINT1");
+			SetBoundBetween("TR_GATE3", "TR_GATE4", 1);
+			SetBoundBetween("TR_GATE1", "TR_GATE2", 0);
+		};
+		case "TR_KONTUR":
+		{
+			Text("TR_KONTUR_TEXT");
+		};
+		case "TR_GATEPOINT1":
+		{
+			int iPassed;
+			iPassed = GetVar("TR_GATE1_PASSES");
+			if (iPassed==0)
+			{
+				if (!GetVar("TR_GATEPOINT1.FAIL"))
+				{
+					SetVar("TR_GATEPOINT1.FAIL");
+					Text("TR_GATEPOINT1_TEXT");
+				}
+				SetSensor("TR_GATEPOINT1");
+			}
+			else
+			{
+				DeleteObject("ARROW_GATE1");
+				SetSensor("TR_START2");
+			}
+		};
+		case "TR_START2":
+		{
+			Dialog("TR_START2_TEXT");
+			SetPelengPoint("TR_POINT5", 0);
+			SetSensor("TR_POINT5");
+			SetSensor("TR_GATEPOINT2");
+			CreateObjectAt("ARROW_P5", "ST_ARROW", "TR_POINT5");
+			SetBoundBetween("TR_GATE1", "TR_GATE2", 1);
+		};
+		case "TR_POINT5": 
+		{  
+			Text("TR_POINT5_TEXT");
+			SetPelengPoint("TR_POINT6", 0);
+			SetSensor("TR_POINT6");
+			DeleteObject("ARROW_P5");
+			CreateObjectAt("ARROW_P6", "ST_ARROW", "TR_POINT6");
+		};
+		case "TR_POINT6": 
+		{  
+			Text("TR_POINT6_TEXT");
+			SetPelengPoint("TR_POINT7", 0);
+			SetSensor("TR_POINT7");
+			DeleteObject("ARROW_P6");
+			CreateObjectAt("ARROW_P7", "ST_ARROW", "TR_POINT7");
+		};
+		case "TR_POINT7": 
+		{  
+			Text("TR_POINT7_TEXT");
+			SetPelengPoint("TR_POINT8", 0);
+			SetSensor("TR_POINT8");
+			DeleteObject("ARROW_P7");
+			CreateObjectAt("ARROW_P8", "ST_ARROW", "TR_POINT8");
+		};
+		case "TR_POINT8": 
+		{  
+			Text("TR_POINT8_TEXT");
+			SetPelengPoint("TR_POINT9", 0);
+			SetSensor("TR_POINT9");
+			DeleteObject("ARROW_P8");
+			CreateObjectAt("ARROW_P9", "ST_ARROW", "TR_POINT9");
+		};
+		case "TR_POINT9": 
+		{  
+			Text("TR_POINT9_TEXT");
+			SetPelengPoint("TR_GATEPOINT2", 0);
+			DeleteObject("ARROW_P9");
+			CreateObjectAt("ARROW_GATE2", "ST_ARROW", "TR_GATEPOINT2");
+			SetBoundBetween("TR_GATE3", "TR_GATE4", 0);
+			SetBoundBetween("TR_GATE5", "TR_GATE6", 1);
+			SetVar("TR_GATE2_PASSES", 1);
+		};
+		case "TR_GATEPOINT2":
+		{
+			int iVar;
+			iVar = GetVar("TR_GATE2_PASSES");
+			
+			if (iVar==0)
+			{
+				if (!GetVar("TR_GATEPOINT2.FAIL"))
+				{
+					Text("TR_GATEPOINT2_TEXT");
+					SetVar("TR_GATEPOINT2.FAIL");
+				}
+				SetSensor("TR_GATEPOINT2");				
+			}
+			else
+			{
+				DeleteObject("ARROW_GATE2");
+				SetSensor("TR_START3");
+				SetPelengPoint("");
+			}
+		};
+		case "TR_START3":
+		{
+			Dialog("TR_START3_TEXT");
+			CreateObjectAt("TR_KONT1", "TT_CONTAINER", "TR_KONT1");
+			SetSensor("TR_GATEPOINT3");
+			SetBoundBetween("TR_GATE3", "TR_GATE4", 1);
+		};
+		case "TR_GATEPOINT3":
+		{
+			int iVar;
+			iVar = GetVar("TR_GATE3_PASSES");
+			
+			if (iVar==0)
+			{
+				if (!GetVar("TR_GATEPOINT3.FAIL"))
+				{
+					Text("TR_GATEPOINT3_TEXT");
+					SetVar("TR_GATEPOINT3.FAIL");
+				}
+				SetSensor("TR_GATEPOINT3");
+			}
+			else
+			{
+				DeleteObject("ARROW_GATE3");
+				SetSensor("TR_START4");
+				SetPelengPoint("TR_START4", 0);
+			}
+		};
+		case "TR_START4":
+		{
+			Dialog("TR_START4_TEXT");
+			SetBoundBetween("TR_GATE5", "TR_GATE6", 1);
+			SetBoundBetween("TR_GATE7", "TR_GATE8", 1);
+			AddItem("AMM_FAST_BOMB", 10);
+			SetTimer("OutOfBomb", 0.1);
+			CreateMech("TR_TARGET_01", "TR_ENEMY1", "CFG_TRAIN_TARGET");
+			SetTarget("TR_TARGET_01");
+			SetMechName("TR_TARGET_01", "KILL ME");
+			SetSensor("TR_GATEPOINT4");
+		};
+		case "TR_GATEPOINT4":
+		{
+		   int iPassed;
+			iPassed = GetVar("TR_GATE4_PASSES");
+			if (iPassed==0)
+			{
+				if (!GetVar("TR_GATEPOINT4.FAIL"))
+				{
+					SetVar("TR_GATEPOINT4.FAIL");
+					Text("TR_GATEPOINT4_TEXT");
+				}
+				SetSensor("TR_GATEPOINT4");
+			}
+			else
+			{
+				DeleteObject("ARROW_GATE4");
+				SetSensor("TR_START5");
+				SetPelengPoint("TR_START5", 0);
+			}
+		}
+		case "TR_START5":
+		{
+			Dialog("TR_START5_TEXT");
+			SetBoundBetween("TR_GATE7", "TR_GATE8", 1);
+			SetBoundBetween("TR_GATE9", "TR_GATE10", 1);
+			AddItem("AMM_FAST_BOMB", 10);
+			AddItem("AMM_ROCKET", 10);
+			CreateMech("TR_TARGET_04", "TR_ENEMY4", "CFG_TRAIN_ENEMY");
+			SetTarget("TR_TARGET_04");
+			SetMechName("TR_TARGET_04", "KILL ME");
+			SetMechGuard("TR_TARGET_04", "TR_ENEMY4");
+			SetRelation("TR_TARGET_04", "PLAYER", -10);
+			SetTowerActive("TR_GUN1", 0);
+			SetTowerActive("TR_GUN2", 0);
+			SetSensor("TR_GATEPOINT5");
+			SetPelengPoint("");
+		}
+		case "TR_GATEPOINT5":
+		{
+			int iPassed;
+			iPassed = GetVar("TR_GATE5_PASSES");
+			if (iPassed==0)
+			{
+				if (!GetVar("TR_GATEPOINT5.FAIL"))
+				{
+					SetVar("TR_GATEPOINT5.FAIL");
+					Text("TR_GATEPOINT5_TEXT");
+				}
+				SetSensor("TR_GATEPOINT5");
+			}
+			else
+			{
+				DeleteObject("ARROW_GATE5");
+				SetPelengPoint("TR_TUNNEL");
+				SetBoundBetween("TR_GATE9", "TR_GATE10", 0);
+				DeleteObject("ARROW_GATE5");
+				AddItem("AMM_FAST_BOMB", -1000);
+				AddItem("AMM_ROCKET", -1000);
+				ClearLog();
+				SetTowerActive("TR_GUN1", 1);
+				SetTowerActive("TR_GUN2", 1);
+				Dialog("TR_GUNSACTIVE_TEXT");
+			}
+		}
+	}
+}
+
+void proc OnKill(char cMech)
+{
+	SetTimer("OnKillEnd", 0.01, cMech);
+}
+
+void proc OnKillEnd(char cMech)
+{
+	switch (cMech)
+	{
+		case "TR_TARGET_01":
+		{
+			SetVar("TARGET1.DESTROYED");
+			AddItem("AMM_FAST_BOMB", -1000);
+			ClearLog();
+			Dialog("TR_ENEMY1_TEXT");			
+			AddItem("AMM_ROCKET", 10);
+			SetTimer("OutOfRocket", 0.1);
+			CreateMech("TR_TARGET_02", "TR_ENEMY2", "CFG_TRAIN_TARGET");
+			SetTarget("TR_TARGET_02");
+			SetMechName("TR_TARGET_02", "KILL ME");
+			GliderGo("TR_TARGET_02", "TR_ENEMY3");			
+			SetSensorNPC("TR_ENEMY3", "TR_TARGET_02");
+		}
+		
+		case "TR_TARGET_02":
+		{
+			SetVar("TARGET2.DESTROYED");
+			AddItem("AMM_ROCKET", -1000);
+			ClearLog();			
+			Dialog("TR_ENEMY2_TEXT");
+			AddItem("GUN_PULSE_GAZER");
+			CreateMech("TR_TARGET_03", "TR_ENEMY3", "CFG_TRAIN_TARGET");
+			SetMechName("TR_TARGET_03", "KILL ME");
+			SetTarget("TR_TARGET_03");
+			GliderGo("TR_TARGET_03", "TR_ENEMY2");		
+			SetSensorNPC("TR_ENEMY2", "TR_TARGET_03");
+	   }
+		case "TR_TARGET_03":
+		{
+			Text("TR_ENEMY3_TEXT");
+			UninstallEquipLayer(EQIP_GUN1);
+			SetBoundBetween("TR_GATE7", "TR_GATE8", 0);
+			SetPelengPoint("TR_GATEPOINT4", 0);
+			CreateObjectAt("ARROW_GATE4", "ST_ARROW", "TR_GATEPOINT4");
+			SetVar("TR_GATE4_PASSES", 1);
+		}
+		case "TR_TARGET_04":
+		{
+			ClearLog();
+			SetVar("TR_GATE5_PASSES", 1);
+			Dialog("TR_ENEMY4_TEXT");
+			SetPelengPoint("TR_GATEPOINT5", 0);
+			CreateObjectAt("ARROW_GATE5", "ST_ARROW", "TR_GATEPOINT5");
+		}
+	}
+}
+
+  
+void proc OnPickUp(char item)
+{
+	switch (item)
+	{
+	case "TR_KONT1": 
+	{ 
+		CreateObjectAt("TR_KONT2", "TT_CONTAINER", "TR_KONT2");
+		Text("TR_KONT1_TEXT");
+	};
+	case "TR_KONT2": 
+	{ 
+		CreateObjectAt("TR_KONT3", "TT_CONTAINER", "TR_KONT3");
+		Text("TR_KONT2_TEXT");
+	};	
+	case "TR_KONT3": 
+	{ 
+		CreateObjectAt("TR_KONT4", "TT_CONTAINER", "TR_KONT4");
+		Text("TR_KONT3_TEXT");
+	};	
+	case "TR_KONT4": 
+	{ 
+		Text("TR_KONT4_TEXT");
+		SetPelengPoint("TR_GATEPOINT3", 0);
+		SetBoundBetween("TR_GATE5", "TR_GATE6", 0);
+		SetBoundBetween("TR_GATE7", "TR_GATE8", 1);
+		CreateObjectAt("ARROW_GATE3", "ST_ARROW", "TR_GATEPOINT3");
+		SetVar("TR_GATE3_PASSES", 1);
+	};
+	}; // switch
+}
+
+void proc OutOfBomb()
+{
+	if (!GetVar("TARGET1.DESTROYED"))
+	{
+		SetTimer("OutOfBomb", 0.1);
+		AddItem("AMM_FAST_BOMB", -10);
+		AddItem("AMM_FAST_BOMB", 10);
+	}
+}
+
+void proc OutOfRocket()
+{
+	if (!GetVar("TARGET2.DESTROYED"))
+	{
+		SetTimer("OutOfRocket", 0.1);
+		AddItem("AMM_ROCKET", -10);
+		AddItem("AMM_ROCKET", 10);
+	}
+}
+
+void proc OnEnterSensorNPC(char cSPoint, char cMech)
+{
+	switch (cSPoint)
+	{
+		case "TR_ENEMY3":
+		{
+			GliderGo(cMech, "TR_ENEMY2");
+			SetSensorNPC("TR_ENEMY2", cMech);
+		}
+		case "TR_ENEMY2":
+		{
+			GliderGo(cMech, "TR_ENEMY3");
+			SetSensorNPC("TR_ENEMY3", cMech);
+		}
+	}
+}

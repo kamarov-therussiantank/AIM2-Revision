@@ -1,0 +1,6 @@
+#include "include\AIM.src"
+
+void proc OnTest(char item)
+{
+	GetBuildOwner(item);
+}

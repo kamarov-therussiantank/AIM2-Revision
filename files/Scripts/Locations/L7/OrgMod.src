@@ -1,0 +1,33 @@
+#include "include\AIM.cpp"
+
+void proc OnClusterMech(char cMech, char cBuild)
+{
+	PlayVideo("Data\Video\orgmod.bik");
+	if (cBuild=="B_L5_SBUNKER")
+	{
+		Dialog("TS_LALL_TEXT2_1_2");
+		SetQuestPart("TS_L7_J_Q1_3", "TS_L7_J_Q1_5");
+	}
+	else
+	{
+		Dialog("TS_LALL_TEXT2_1_1");
+		SetQuestPart("TS_L7_J_Q1_3", "TS_L7_J_Q1_4");
+	}
+	// Захват локации при помощи органического модификатора
+	CaptureLocation(GetArea(), "ORG_PLAYER");
+	SetBuildOwner(cBuild, "ORG_PLAYER");
+	StartScriptEvent("Events\OnClusterMech", cMech, cBuild);
+	MarkMsgJ("TS_L7_J_Q1_3", 2);
+	SetVar("AIM.ORGMOD.APPLY");
+}
+
+void proc OnTalk(char cMech)
+{
+	if (GetMechClan("PLAYER")!="ORG_PLAYER") return;
+}
+
+void proc OnTryConvict(char cMech)
+{
+	SetMechClan("TS_ITEM6_1", "ORG_PLAYER");
+	OnTalk(cMech);
+}

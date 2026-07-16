@@ -1,0 +1,22 @@
+#include "include\AIM.cpp"
+
+void proc OnKill(char gliderID, char groupID)
+{
+	//---Событие срабатывает когда убивают глайдер во время прохождения Генерируемого квеста---//
+/*  int iGenQ;
+	iGenQ = GetVar("gen_q");
+	if (iGenQ>0 && GetVarChar("g_glidertarget") == gliderID)
+	{
+		if (iGenQ==5)
+		{
+			Text("INT_QUEST_FAIL");
+			SetVar("g_gliderdie", 1);
+			StopTimer("endtime");
+		} 
+	}
+*/	
+
+   if (!GetVar("DEMO"))
+	   StartScriptEvent("Clans\Events\Kill.src", "OnKill", gliderID, groupID);
+	//..
+}

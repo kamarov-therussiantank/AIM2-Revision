@@ -1,0 +1,31 @@
+#include "include\AIM.cpp"
+
+void proc OnEscortLeftBehind(char gliderID)
+{
+	StartScriptEvent("Clans\Events\EscortLeftBehind.src", "OnEscortLeftBehind", gliderID);
+	//..
+	int iValue;
+	  iValue = GetVar("gen_q");
+	  char glidertarget;
+	  glidertarget = GetVarChar("g_glidertarget");
+	  
+	  if (( iValue == 12 || iValue == 13) && 
+		  (glidertarget == gliderID) && (GetVar("gen_assign") == 1))
+	  {
+		AssignGliderToPlayer(glidertarget, 0); 
+		Text("MSG_GEN_AWAY");
+		if (iValue==12)
+		{
+			Text("INT_QUEST_FAIL");
+			SetVar("gen_q", 99);
+			GliderInvis(glidertarget, 1);
+			RemovePeleng(glidertarget);
+			RemovePeleng(GetVarChar("end_poindid"));
+
+		}
+		else
+			SetVar("gen_assign", 0);
+	}
+}
+
+

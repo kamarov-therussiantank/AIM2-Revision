@@ -1,0 +1,365 @@
+#include "include\AIM.src"
+
+void proc CheckQuest(char item)
+{
+	int haveq;
+	haveq = GetVar("numberq_fant");
+
+	char activq;
+	activq = GetVarChar("fant_activeq");
+
+	char QuestID;
+	QuestID = activq;
+
+
+//------------Проверяем выполнен ли квест T_L5_FANT_06 и если выполнен даем награду------------//
+	if (activq == "T_L5_FANT_06")
+	{
+		if (GetVar("T_L5_FANT_06_compl") == 1)	
+		{
+			AddAmount(AMOUNT_ENERGY, GetVar("fant_award"));
+			AddAmount(AMOUNT_RATING_QUEST, GetVar("fant_award")/20);
+			Text("T_L5_FANT_06.COMPL");
+			SetVar("fant_activiq", 0);
+			SetVar("numberq_fant", 1);
+			CompleteQuest(QuestID);
+		}
+		else
+		{
+			Text("T_L5_FANT_06.NOTEND");
+		}
+	}
+
+//------------Проверяем выполнен ли квест T_L5_FANT_07 и если выполнен даем награду------------//	
+	if (activq == "T_L5_FANT_07")
+	{
+		if (GetVar("T_L5_FANT_07_compl") == 6)	
+		{
+			AddAmount(AMOUNT_ENERGY, GetVar("fant_award"));
+			Text("T_L5_FANT_07.COMPL");
+			SetVar("fant_activiq", 0);
+			SetVar("numberq_fant", 2);
+		}
+		else
+		{
+			Text("T_L5_FANT_07.NOTEND");
+		}
+	}
+
+//------------Проверяем выполнен ли квест T_L5_FANT_01 и если выполнен даем награду------------//
+	if (activq == "T_L5_FANT_01")
+	{
+		if ((IsClanDead("ORG_FINDERS") == 1) || (IsClanDead("ORG_MERCATORS") == 1) || (GetClanRelation("ORG_MERCATORS", "ORG_FINDERS") <= -5))
+		{
+			AddAmount(AMOUNT_ENERGY, GetVar("fant_award"));
+			Text("T_L5_FANT_01.COMPL");
+			SetVar("fant_activiq", 0);
+			SetVar("numberq_fant", 3);
+		}
+		else
+		{
+			Text("T_L5_FANT_01.NOTEND");
+		}
+	}
+
+//------------Проверяем выполнен ли квест T_L5_FANT_02 и если выполнен даем награду------------//
+
+	if (activq == "T_L5_FANT_02")
+	{
+		if (GetVar("T_L5_FANT_02_compl") >= 20)	
+		{
+			AddAmount(AMOUNT_ENERGY, GetVar("fant_award"));
+			Text("T_L5_FANT_02.COMPL");
+			SetVar("fant_activiq", 0);
+			SetVar("numberq_fant", 4);
+		}
+		else
+		{
+			Text("T_L5_FANT_02.NOTEND");
+		}
+	}
+	
+	
+//------------Проверяем выполнен ли квест T_L5_FANT_03 и если выполнен даем награду------------//
+
+	if (activq == "T_L5_FANT_03")
+	{
+		if (GetVar("T_L5_FANT_03_compl") == 1)	
+		{
+			AddAmount(AMOUNT_ENERGY, GetVar("fant_award"));
+			Text("T_L5_FANT_03.COMPL");
+			SetVar("fant_activiq", 0);
+			SetVar("numberq_fant", 5);
+		}
+		else
+		{
+			Text("T_L5_FANT_03.NOTEND");
+		}
+	}
+	
+//------------Проверяем выполнен ли квест T_L5_FANT_04 и если выполнен даем награду------------//
+
+	if (activq == "T_L5_FANT_04")
+	{
+		if (GetVar("T_L5_FANT_04_compl") == 1)	
+		{
+			AddAmount(AMOUNT_ENERGY, GetVar("fant_award"));
+			Text("T_L5_FANT_04.COMPL");
+			SetVar("fant_activiq", 0);
+			SetVar("numberq_fant", 6);
+		}
+		else
+		if (GetVar("T_L5_FANT_04_fail") == 1)
+		{
+			Text("T_L5_FANT_04.FAIL");
+			SetVar("fant_activiq", 0);
+			SetVar("numberq_fant", 6);
+		}
+		else
+		{
+			Text("T_L5_FANT_04.NOTEND");
+		}
+	}
+}
+
+void proc OnEnterBuild(char item)
+{
+	if (GetVar("fant_activiq") == 1) CheckQuest(item);
+	
+	if (GetVar("fant_activiq") == 0)
+	{
+		int haveq;
+		haveq = GetVar("numberq_fant");
+
+		switch(haveq) 
+		{	
+			case 0: Quest("T_L5_FANT_06");
+//			case 1: Quest("T_L5_FANT_07");
+//			case 2: Quest("T_L5_FANT_01");
+//			case 3: Quest("T_L5_FANT_02");
+//			case 4: Quest("T_L5_FANT_03");
+//			case 5: Quest("T_L5_FANT_04");
+//			case 6: Quest("T_L5_FANT_05");
+		} //end switch
+	} // end if
+} // end proc
+
+
+//---------Вводим переменные влиящие на текст задания до вывода текста например награда-------------//
+void proc take_quest(char item)
+{
+	switch(item) 
+	{
+		case "T_L5_FANT_01":
+		{
+			SetVar("fant_award", 5000);
+			SetVar("fant_q", 1);
+		}
+		case "T_L5_FANT_02":
+		{
+			SetVar("fant_award", 5000);
+			SetVar("fant_q", 2);
+		}
+		case "T_L5_FANT_03":
+		{
+			SetVar("fant_award", 5000);
+			SetVar("fant_q", 3);
+		}
+		case "T_L5_FANT_04":
+		{
+			SetVar("fant_award", 5000);
+			SetVar("fant_q", 4);
+		}
+		case "T_L5_FANT_05":
+		{
+			SetVar("fant_award", 5000);
+			SetVar("fant_q", 5);
+		}
+		case "T_L5_FANT_06":
+		{
+			SetVar("fant_award", 10000);
+			SetVar("fant_q", 6);
+		}
+		case "T_L5_FANT_07":
+		{
+			SetVar("fant_award", 5000);
+			SetVar("fant_q", 7);
+		}
+	}//end switch
+}//end proc
+
+
+
+//-------При нажатии на текст задания в правом верхнем окошке срабатывает эта функция---///
+void proc OnQuest(char item)
+{
+	ClearWindow();	
+	char sVar;
+	sVar = GetVarChar("CurrentBuild");
+		
+	RemoveQuest(item); // Удаляем выбраный квест из списка
+	take_quest(item); // Фукнция до выдачи задания и вывода текста
+	Text(CONCAT(item, ".TASK"));
+	
+	if (GetVar("AIM.TESTING"))
+	  Text("GEN_ACCEPT");
+	else
+	  Text("T_ACCEPT");
+}//end proc
+
+
+//-----После вывода текста, если в тексте выбрали согласие на выполнение задания тогда эта функция----///
+void proc YES()
+{
+	DeleteText("T_ACCEPT");
+
+	int fantQ;
+	fantQ = GetVar("fant_q");
+
+	switch(fantQ)
+	{
+		case 1:
+			{
+				ClearWindow();
+				Text("T_L5_FANT_01.GET");
+				SetVar("T_L5_FANT_01", 1);
+				SetVarChar("fant_activeq", "T_L5_FANT_01");
+				SetQuest("T_L5_FANT_01", "T_L5_FANT_01.TASK", 5000);
+				SetVar("fant_activiq", 1);
+				//Text("TEST_COMPL");
+				//GliderInvis("MORTE-ARTO", 0);
+			}
+		case 2:
+			{
+				ClearWindow();
+				Text("T_L5_FANT_02.GET");
+				SetVar("T_L5_FANT_02", 1);
+				SetVarChar("fant_activeq", "T_L5_FANT_02");
+				SetQuest("T_L5_FANT_02", "T_L5_FANT_02.TASK", 5000);
+				SetVar("fant_activiq", 1);
+			}
+		case 3:
+			{
+				ClearWindow();
+				Text("T_L5_FANT_03.GET");
+				SetVar("T_L5_FANT_03", 1);
+				SetVarChar("fant_activeq", "T_L5_FANT_03");
+				SetQuest("T_L5_FANT_03", "T_L5_FANT_03.TASK", 5000);
+				SetVar("fant_activiq", 1);
+				CreateGroup("T_GRP_RO-KEEL");
+			}
+		case 4:
+			{
+				ClearWindow();
+				Text("T_L5_FANT_04.GET");
+				SetVar("T_L5_FANT_04", 1);
+				SetVarChar("fant_activeq", "T_L5_FANT_04");
+				SetQuest("T_L5_FANT_04", "T_L5_FANT_04.TASK", 5000);
+				SetVar("fant_activiq", 1);
+			}
+		case 5:
+			{
+				ClearWindow();
+				Text("T_L5_FANT_05.GET");
+				SetVar("T_L5_FANT_05", 1);
+				SetVarChar("fant_activeq", "T_L5_FANT_05");
+				SetQuest("T_L5_FANT_05", "T_L5_FANT_05.TASK", 5000);
+				SetVar("fant_activiq", 1);
+				CreateGroup("T_GRP_10MERCS"); 
+				GliderGo("T_GRP_10MERCS", "POINT_QFANT5_TARGET"); 
+				CreateGroup("GRP_3Fant_1"); 
+				GliderGo("GRP_3Fant_1", "POINT_QFANT5_TARGET"); 
+				CreateGroup("GRP_3Mercs_1"); 
+				GliderGo("GRP_3Mercs_1", "POINT_QFANT5_TARGET"); 
+				SetTimer("T_L5_FANT_05_time", 5);
+			}
+		case 6:
+			{
+				ClearWindow();
+				Text("T_L5_FANT_06.GET");
+				SetVar("T_L5_FANT_06", 1);
+				SetVarChar("fant_activeq", "T_L5_FANT_06");
+				SetQuest("T_L5_FANT_06", "T_L5_FANT_06.TASK", 5000);
+				SetVar("fant_activiq", 1);
+				//GliderInvis("MORTE-ARTO", 0);
+				CreateGroup("MORTE-ARTO"); 
+			}
+		case 7:
+			{
+				ClearWindow();
+				Text("T_L5_FANT_07.GET");
+				SetVar("T_L5_FANT_07", 1);
+				SetVarChar("fant_activeq", "T_L5_FANT_07");
+				SetQuest("T_L5_FANT_07", "T_L5_FANT_07.TASK", 5000);
+				SetVar("fant_activiq", 1);
+				SetPelengPoint("T_L5_FANT_07_POINT01");
+			}
+	} //end case
+}//end proc
+
+//------------При таймере посылаем вторую группу в бой для T_L5_FANT_05------------//
+void proc T_L5_FANT_05_time()
+{
+	CreateGroup("GRP_3Fant_2"); 
+	GliderGo("GRP_3Fant_2", "POINT_QFANT5_TARGET"); 
+	CreateGroup("GRP_3Fant_3"); 
+	GliderGo("GRP_3Fant_3", "POINT_QFANT5_TARGET"); 
+	
+	CreateGroup("GRP_3Mercs_2"); 
+	GliderGo("GRP_3Mercs_2", "POINT_QFANT5_TARGET"); 
+	CreateGroup("GRP_3Mercs_3"); 
+	GliderGo("GRP_3Mercs_3", "POINT_QFANT5_TARGET"); 
+	SetTimer("T_L5_FANT_05_time1", 5);
+}//end proc
+
+//------------При таймере посылаем третью группу в бой для T_L5_FANT_05------------//
+void proc T_L5_FANT_05_time1()
+{
+	CreateGroup("GRP_3Fant_4"); 
+	GliderGo("GRP_3Fant_4", "POINT_QFANT5_TARGET"); 
+	CreateGroup("GRP_3Fant_5"); 
+	GliderGo("GRP_3Fant_5", "POINT_QFANT5_TARGET"); 
+	
+	CreateGroup("GRP_3Mercs_4"); 
+	GliderGo("GRP_3Mercs_4", "POINT_QFANT5_TARGET"); 
+	CreateGroup("GRP_3Mercs_5"); 
+	GliderGo("GRP_3Mercs_5", "POINT_QFANT5_TARGET"); 
+	SetTimer("T_L5_FANT_05_time2", 5);
+}//end proc
+
+//------------При таймере посылаем четвертую группу в бой для T_L5_FANT_05------------//
+void proc T_L5_FANT_05_time2()
+{
+	CreateGroup("GRP_3Fant_6"); 
+	GliderGo("GRP_3Fant_6", "POINT_QFANT5_TARGET"); 
+	CreateGroup("GRP_3Fant_7"); 
+	GliderGo("GRP_3Fant_7", "POINT_QFANT5_TARGET"); 
+	
+	CreateGroup("GRP_3Mercs_6"); 
+	GliderGo("GRP_3Mercs_6", "POINT_QFANT5_TARGET"); 
+	CreateGroup("GRP_3Mercs_7"); 
+	GliderGo("GRP_3Mercs_7", "POINT_QFANT5_TARGET"); 
+	SetTimer("T_L5_FANT_05_time3", 5);
+}//end proc
+
+//------------время завершенно для T_L5_FANT_05 и проверяем остались ли живы фантомы------------//
+void proc T_L5_FANT_05_time3()
+{
+	if (IsGroupKilled("GRP_3Fant_1") == 0 || IsGroupKilled("GRP_3Fant_2") == 0 || IsGroupKilled("GRP_3Fant_3") == 0 || IsGroupKilled("GRP_3Fant_4") == 0 || IsGroupKilled("GRP_3Fant_5") == 0 || IsGroupKilled("GRP_3Fant_6") == 0 || IsGroupKilled("GRP_3Fant_7") == 0)
+	{
+		SetVar("T_L5_FANT_05_compl", 1);
+		Text("Q_COMPLETE");	
+	}
+	else
+	{
+		Text("Q_FAIL");	
+		SetVar("fant_activiq", 0);
+		SetVar("numberq_fant", 7);
+	}
+}//end proc
+
+//-----После вывода текста, если в тексте выбрали отказ от задания тогда эта функция----///
+void proc NO()
+{
+	ClearWindow();
+}//end proc

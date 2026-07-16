@@ -1,0 +1,11 @@
+#include "include\AIM.cpp"
+
+void proc StartGame()
+{
+	// Для того, чтобы сменить карту,
+	// необходимо сформировать карту, кинуть ее ( файлы mmp, mmo, mmm) в каталог Data
+	// И заменить здесь название файла ( без расширения ) 
+	MoveToLocation("demo_map");
+}
+
+StartGame();

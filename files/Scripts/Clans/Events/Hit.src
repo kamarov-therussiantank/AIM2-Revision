@@ -1,0 +1,38 @@
+#include "include\AIM.src"
+
+void proc OnHit(char gliderID)
+{
+	//---Событие срабатывает когда атакуем глайдера во время прохождения T_L5_FANT_01---//	
+	char activq;
+	activq = GetVarChar("fant_activeq");
+	
+	if (activq == "T_L5_FANT_01" && gliderID == "MORTE-ARTO")
+	{
+		CreateGroup("T_L5_FANT_06_MORTEGUARDS"); 
+		//GliderInvis("T_L5_FANT_06_MORTEGUARDS", 0);
+		GliderGo("T_L5_FANT_06_MORTEGUARDS", "T_L5_FANT_06_POINT_GUARDS"); 
+	}
+}
+
+void proc OnPlayerHit(char cMechID)
+{
+	
+	// Для квеста считающих с посещением всех секторов..
+	if (cMechID=="KONTUR")
+	{
+		if ( GetVar("AIM.RECK.QUEST.NUM")==2 &&
+			 GetItem("TOV_T2_L11_CRYSTAL"))
+		{
+			char sArea;
+			sArea = GetArea();
+			char sID;
+			sID = "AIM.RECK02."+sArea;
+			if (GetVarChar(sID)=="")
+			{
+				SetVarChar(sID, "=green");
+				Text("MSG_T2_L11_CONTUR_REC");
+				SetVar("AIM.RECK02.NUM", GetVar("AIM.RECK02.NUM")+1);
+			}
+		}
+	}
+}

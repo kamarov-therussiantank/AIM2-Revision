@@ -1,0 +1,19 @@
+#include "include\AIM.src"
+
+void proc OnEnterLocation(char item)
+{
+  // Сенсор ставим только 1 раз
+   if (!GetVar("AIM.L13.START"))
+	{
+		SetSensor("TS_L13_POINT1"); 
+		SetVar("AIM.L13.START");
+
+		CreateGroup("TS_GRP_LOARRAT", "", 1);
+		GliderInvis("TS_GRP_LOARRAT", 1);
+		SetMechGeneration("TS_GRP_LOARRAT", 5);
+		DamageGlider("TS_GRP_LOARRAT", 100000);
+		
+		CreateObjectAt("TS_GRP_LOARRAT", "TT_MECHANOID", "TS_L13_POINT1");
+		AddItemToContainer("TS_GRP_LOARRAT", "TS_GRP_LOARRAT", 1);
+	}
+}

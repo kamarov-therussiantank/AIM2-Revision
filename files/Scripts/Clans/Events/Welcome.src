@@ -1,0 +1,16 @@
+#include "include\AIM.src"
+
+
+void proc OnEnterBuild(char item)
+{
+int typebuild;
+typebuild = GetBuildType(item);
+switch(typebuild)
+	{
+		case 1:		Text("S_BASE");
+		case 2:		Text("S_RECYCLE");
+		case 12:	 Text("S_FEEDSTOCK");
+		case 5:		Text("S_KA");
+	} //end switch
+
+} //end proc

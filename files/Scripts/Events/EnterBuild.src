@@ -1,0 +1,633 @@
+#include "include\RANDOMQ.cpp"
+
+void proc CheckGenerated(char item)
+{
+	int iTypeq;
+	iTypeq = GetVar("gen_q");
+	if (iTypeq==2) iTypeq = 1;		// GEN_DELIVER_1==GEN_DELIVER
+//	if (iTypeq==7) iTypeq = 5;		// GEN_KILL_2==GEN_KILL
+	if (iTypeq==13) iTypeq = 12;	// GEN_TRANS_1==GEN_TRANS
+
+	if (iTypeq > 0 && GetVarChar("g_buildtarget")==item)
+	{
+		switch(iTypeq) //Определяем тип квеста
+		{
+			//GEN_DELIVER
+			case 1: 
+			{
+				char items_need;
+				items_need = GetVarChar("g_itemid");
+				int iItemRest;
+				iItemRest = GetVar("g_itemrest");
+				if (GetItem(items_need)>0)
+				{
+					if (GetItem(items_need) >= iItemRest)
+					{
+						if (iItemRest!=GetVar("g_itemcount"))
+							Text(GetVarChar("g_questid")+".COMPL2");
+						else
+							Text(GetVarChar("g_questid")+".COMPL");
+						RemoveItem(items_need, iItemRest);
+						award_take();
+						StopTimer("endtime");
+					}
+					else
+					{
+						SetVar("g_itemrest", iItemRest-GetItem(items_need));
+						Text(GetVarChar("g_questid")+".PART");
+						RemoveItem(items_need, GetItem(items_need));
+					} //end if
+				}
+				else
+					Text(GetVarChar("g_questid")+".NOTEND");
+			}
+			// GEN_DELIVER_2		
+			case 3:
+			{
+				char items_need;
+				items_need = GetVarChar("g_glidertarget");
+				if (GetItem(items_need)==1)
+				{
+					 Text(GetVarChar("g_questid")+".COMPL");
+					 RemoveItem(items_need);
+					 award_take();
+					 StopTimer("endtime");					 
+				}
+				else
+					fail_quest();
+			}
+			//GEN_FIND				
+			case 4:	
+			{
+				if (GetItem("TOV_UNIQUE_CONTAINER") != 0)
+				{
+					Text(GetVarChar("g_questid")+".COMPL");
+					RemoveItem("TOV_UNIQUE_CONTAINER");
+					award_take();
+					StopTimer("endtime");					
+				} //end if
+				else
+					Text(GetVarChar("g_questid")+".NOTEND");
+			}
+			//GEN_KILL	
+			case 5:
+			{
+				if (GetVar("g_gliderdie"))
+					fail_quest();
+				else
+				if (GetItem(GetVarChar("g_glidertarget")) == 1)
+				{
+					Text(GetVarChar("g_questid")+".COMPL");
+					RemovePeleng(GetVarChar("g_glidertarget"));
+					award_take();
+					StopTimer("endtime");					
+				} //end if
+				else
+					Text(GetVarChar("g_questid")+".NOTEND");
+			}
+			//GEN_KILL_1
+			case 6:	
+			{
+				if (GetVar("g_gliderdie"))
+				{
+					Text(GetVarChar("g_questid")+".COMPL");
+					RemovePeleng(GetVarChar("g_glidertarget"));
+					award_take();
+					StopTimer("endtime");					
+				} //end if
+				else
+					Text(GetVarChar("g_questid")+".NOTEND");
+			}
+			//GEN_KILL_2
+			case 7:
+			{
+				if ( GetItem(GetVarChar("g_glidertarget"))==1)
+				{
+					RemovePeleng(GetVarChar("g_glidertarget"));
+					Text(GetVarChar("g_questid")+".COMPL");
+					award_take();
+					StopTimer("endtime");					
+				}
+				else
+					Text(GetVarChar("g_questid")+".NOTEND");
+			}
+			// GEN_KILL_3
+			case 8:	
+			{
+				int rating;
+				rating = GetGliderR(GetVarChar("g_glidertarget"));
+				if (rating == ERROR || rating<1)
+				{
+					RemovePeleng(GetVarChar("g_glidertarget"));
+					Text(GetVarChar("g_questid")+".COMPL");
+					award_take();
+					StopTimer("endtime");					
+				} //end if
+				else
+					Text(GetVarChar("g_questid")+".NOTEND");
+			}
+			// GEN_MAIL			  
+			case 9:
+			{
+				if (GetItem("TOV_INFORMPAKET")==1)
+				{
+					 Text(GetVarChar("g_questid")+".COMPL");
+					 RemoveItem("TOV_INFORMPAKET");
+					 award_take();
+					 StopTimer("endtime");					 
+				}else
+					Text(GetVarChar("g_questid")+".NOTEND");
+			}
+			//GEN_MAIL_1
+			case 10:	
+			{
+				if (GetItem("TOV_UNIQUE_CONTAINER") == 1)
+				{
+					 Text(GetVarChar("g_questid")+".COMPL");
+					 RemoveItem("TOV_UNIQUE_CONTAINER");
+					 award_take();
+				}else
+					Text(GetVarChar("g_questid")+".NOTEND");
+			}
+			// GEN_MAIL_2
+			case 11:	
+			{
+				// Нету информпакета - значит передали кому надо..
+				if (!GetItem("TOV_INFORMPAKET"))
+				{
+					Text(GetVarChar("g_questid")+".COMPL");
+					RemovePeleng(GetVarChar("g_glidertarget"));
+					award_take();
+					StopTimer("endtime");					
+				}else
+					Text(GetVarChar("g_questid")+".NOTEND");
+			}
+			// GEN_TRANS
+			case 12:	//Trans
+			{
+				if (GetVar("GEN_TRANS") == 1)
+				{
+					Text(GetVarChar("g_questid")+".COMPL");
+					RemovePeleng(GetVarChar("g_glidertarget"));
+					award_take();
+				}//end if
+				else
+					Text(GetVarChar("g_questid")+".NOTEND");
+			}
+				
+			//Провал по времени
+			case 99: fail_quest();
+		}//end case 
+	}//end if
+	else
+	if (iTypeq>0 && item == GetVarChar("g_buildstart"))
+	{
+		switch(iTypeq) //Определяем тип квеста
+		{
+			//GEN_DELIVER_1
+			case 2:	Text(GetVarChar("g_questid")+".NOTEND");
+			//GEN_DELIVER_2
+			case 3:	Text(GetVarChar("g_questid")+".NOTEND");
+			//GEN_KILL_2			
+			case 7:	Text(GetVarChar("g_questid")+".NOTEND");
+			//GEN_MAIL
+			case 9:	Text(GetVarChar("g_questid")+".NOTEND");
+			// GEN_MAIL_1
+			case 10: Text(GetVarChar("g_questid")+".NOTEND");
+			//Провал по времени
+			case 99: fail_quest();
+		}//end case
+	}//buildstart
+	
+	// Если у игрока есть механоид на переплавку - отбираем его - для задания GEN_DELIVER_2
+	if (GetItem("TOV_GEN_MECH"))
+		RemoveItem("TOV_GEN_MECH");
+
+	// Задания даются только в базах и то, если на нас нету текущего задания
+	// и в испытательных комплексах.
+	if ( (GetBuildType(item) == 1 || GetBuildType(item) == 9) && !GetVar("gen_q"))
+	{
+		// Определяем сколько заданий у нас пустые и столько раз вызываем
+		if (GetVarChar(CONCAT(item, ".T1"))=="") AddGenTaskToBuild(item, "1", 1);
+		if (GetVarChar(CONCAT(item, ".T2"))=="") AddGenTaskToBuild(item, "2", 2);
+		if (GetVarChar(CONCAT(item, ".T3"))=="") AddGenTaskToBuild(item, "3", 3);
+		SetTimer("OnKillGenerate", 1, item);
+		
+		// И опять формируем задания..
+		if (GetVarChar(item+".T1")!="" && GetVarChar(item+".T1")!="BZ")
+			Quest(GetVarChar(item+".T1"));
+		if (GetVarChar(item+".T2")!="" && GetVarChar(item+".T2")!="BZ")
+			Quest(GetVarChar(item+".T2"));
+		if (GetVarChar(item+".T3")!="" && GetVarChar(item+".T3")!="BZ")
+			Quest(GetVarChar(item+".T3"));			
+	}//end else 
+	
+	if ((GetBuildType(item) == 1 || GetBuildType(item) == 9) && GetVar("gen_q"))
+	{
+		Text("GEN_DECLINE_BASE");
+		CloseText("GEN_DECLINE_BASE");
+	}
+} // check generated
+
+
+void proc ArioTalk1()
+{
+	SetVar("AIM.ARIO.TALK.1a");
+}
+
+void proc CheckAIM(char item)
+{
+	// Когда игрок слетал к наутилусу - 
+	if ( GetBuildOwner(item)=="ORG_PLAYER")
+	{
+		if ( GetVar("AIM.NET.NAU.3") && !GetVar("AIM.NET.NAU.4"))
+		{
+			Text("TS_LALL_TEXT1_2");
+			AddItem("TS_ITEM4_1");
+			SetVar("AIM.NET.NAU.4");
+			SetQuestPart("TS_L11_J_Q1_1", "TS_L11_J_TEXT3_2");
+		}
+
+		//  вторая рашифровка от наутилуса..
+		if ( GetVar("AIM.NET.SIN.4") && !GetVar("AIM.NET.SIN.5") )
+		{
+			Text("TS_LALL_TEXT1_4");
+			SetVar("AIM.NET.SIN.5");
+			SetQuestPart("TS_L11_J_Q1_6", "TS_L11_J_TEXT4_1");
+			AddItem("TS_ITEM5_1");
+		}
+		
+		// Подсказки от АРИО
+		if (GetVar("AIM.ARIO.CLUSTER"))
+		{
+			// Арио говорит игроку - типа есть еще INFERION и TARANTOG
+			if (GetArea()=="location5" && !GetVar("AIM.ARIO.TALK.1") &&
+				(!GetVar("AIM.INFERION.CONVICTED") || !GetVar("AIM.TARANTOG.CONVICTED")) )
+			{
+				Text("TS_LALL_TEXT_ARIO_00");
+				SetVar("AIM.ARIO.TALK.1");
+				SetTimer("ArioTalk1", 4);
+			}
+			
+			// Через 4 часа говорит - ну чо - убедим дальше?
+			if (GetVar("AIM.ARIO.TALK.1a") && !GetVar("AIM.ARIO.TALK.2") &&
+				GetVar("G5_CONVICTED")<=1)
+			{
+				Text("TS_LALL_TEXT_ARIO_01");
+				SetVar("AIM.ARIO.TALK.2");
+			}
+			
+			// При убеждении очередного механоида
+			if (GetVar("G5_CONVICTED")==12)
+			{
+				if (!GetVar("AIM.ARIO.TALK.13"))
+				{
+					Text("TS_LALL_TEXT_ARIO_13");
+					SetVar("AIM.ARIO.TALK.13");
+				}
+			}
+			else
+			{
+				//Inferion
+				if (GetVar("AIM.INFERION.CONVICTED") && !GetVar("AIM.TARANTOG.CONVICTED") &&
+					!GetVar("AIM.ARIO.TALK.2"))
+				{
+					Text("TS_LALL_TEXT_ARIO_02");
+					SetVar("AIM.ARIO.TALK.2");
+				}
+				
+				// tarantog
+				if (GetVar("AIM.TARANTOG.CONVICTED") && !GetVar("AIM.INFERION.CONVICTED") &&
+					!GetVar("AIM.ARIO.TALK.3"))
+				{
+					Text("TS_LALL_TEXT_ARIO_03");
+					SetVar("AIM.ARIO.TALK.3");
+				}
+				
+				// loarrat
+				if (GetVar("AIM.LOARRAT.CONVICTED") && !GetVar("AIM.ARIO.TALK.4"))
+				{
+					Text("TS_LALL_TEXT_ARIO_04");
+					SetVar("AIM.ARIO.TALK.4");
+				}				
+				
+				// gaantro
+				if (GetVar("AIM.GAANTRO.CONVICTED") && !GetVar("AIM.ARIO.TALK.5"))
+				{
+					Text("TS_LALL_TEXT_ARIO_05");
+					SetVar("AIM.ARIO.TALK.5");
+				}						  
+				
+				// monceber
+				if (GetVar("AIM.MONCEBER.CONVICTED") && !GetVar("AIM.ARIO.TALK.6"))
+				{
+					Text("TS_LALL_TEXT_ARIO_06");
+					SetVar("AIM.ARIO.TALK.6");
+				}						  
+				
+				// tenebr
+				if (GetVar("AIM.TENEBR.CONVICTED") && !GetVar("AIM.ARIO.TALK.7"))
+				{
+					Text("TS_LALL_TEXT_ARIO_07");
+					SetVar("AIM.ARIO.TALK.7");
+				}						  
+				
+				// fatall
+				if (GetVar("AIM.FATALL.CONVICTED") && !GetVar("AIM.ARIO.TALK.8"))
+				{
+					Text("TS_LALL_TEXT_ARIO_08");
+					SetVar("AIM.ARIO.TALK.8");
+				}						  
+				
+				// aprogus
+				if (GetVar("AIM.APROGUS.CONVICTED") && !GetVar("AIM.ARIO.TALK.9"))
+				{
+					Text("TS_LALL_TEXT_ARIO_09");
+					SetVar("AIM.ARIO.TALK.9");
+				}						  
+				
+				// arhhand
+				if (GetVar("AIM.ARHHAND.CONVICTED") && !GetVar("AIM.ARIO.TALK.10"))
+				{
+					Text("TS_LALL_TEXT_ARIO_10");
+					SetVar("AIM.ARIO.TALK.10");
+				}						  
+
+				// morrando
+				if (GetVar("AIM.MORRANDO.CONVICTED") && !GetVar("AIM.ARIO.TALK.11"))
+				{
+					Text("TS_LALL_TEXT_ARIO_11");
+					SetVar("AIM.ARIO.TALK.11");
+				}						  
+				
+				// vercus
+				if (GetVar("AIM.VERCUS.CONVICTED") && !GetVar("AIM.ARIO.TALK.12"))
+				{
+					Text("TS_LALL_TEXT_ARIO_12");
+					SetVar("AIM.ARIO.TALK.12");
+				}										  
+			}
+			
+			// После использования органического модификатора
+			if (GetVar("AIM.ORGMOD.APPLY") && !GetVar("AIM.ARIO.TALK.14"))
+			{
+				Text("TS_LALL_TEXT_ARIO_14");
+				SetVar("AIM.ARIO.TALK.14");
+			}
+		}
+	} // ORG_PLAYER
+
+	// Задание механоида 5-го поколения МОРРАНДО - привезти 30 механоидов свободных на базу
+	// наргунов
+	if ( GetBuildOwner(item)=="ORG_TOLERANS" && GetVar("MORRANDO.1") && !GetVar("MORRANDO.2") && GetVar("MORRANDO.FREECOUNT"))
+	{
+		int iFree;
+		iFree = GetHoldMech("ORG_FREE");
+		int iNeed;
+		iNeed = GetVar("MORRANDO.FREECOUNT") - iFree;
+		if (iNeed<=0)
+		{ 
+			SetQuestPart("TS_L2_J_Q1_1", "TS_L2_J_Q1_2");
+			iNeed = 0;
+		}
+		SetVar("MORRANDO.FREECOUNT", iNeed);
+	}
+
+	// Задание веркуса - привезти на базу наргунов 
+	if (GetBuildOwner(item)=="ORG_NARGOON" && GetVar("VERCUS.1") && !GetVar("VERCUS.2"))
+	{
+		int iMush;
+		iMush = GetItem("TOV_FUNGUS");
+		//Text(char(iMush)+" грибов съедено. Кайф!");
+		if (iMush)
+			RemoveItem("TOV_FUNGUS", iMush);
+		int iNeed;
+		iNeed = GetVar("VERCUS.MUSHROOMS") - iMush;
+		//Заглушка на случай старых сейвов
+		if (iNeed>50) iNeed = 50-iMush;
+		if (iNeed<0) iNeed = 0;
+		SetVar("VERCUS.MUSHROOMS", iNeed);
+	}
+
+	// Задание тенебра - доставить на 9 сектор разных товаров
+	if ( GetVar("TENEBR.1") && !GetVar("TENEBR.2") && 
+		 GetArea()=="location9" && GetBuildType(item)!=3)
+	{
+		int iNikel;
+		iNikel = GetItem("TOV_NIKEL");
+		if (iNikel)
+		{   
+			if (iNikel>GetVar("TENEBR.NIKEL")) iNikel = GetVar("TENEBR.NIKEL");
+			RemoveItem("TOV_NIKEL", iNikel);
+			iNikel = GetVar("TENEBR.NIKEL") - iNikel;
+			SetVar("TENEBR.NIKEL", iNikel);
+		}
+
+		int iTitan;
+		iTitan = GetItem("TOV_TITAN");
+		if (iTitan)
+		{   
+			if (iTitan>GetVar("TENEBR.TITAN")) iTitan = GetVar("TENEBR.TITAN");
+			RemoveItem("TOV_TITAN", iTitan);
+			iTitan = GetVar("TENEBR.TITAN") - iTitan;
+			SetVar("TENEBR.TITAN", iTitan);
+		}
+
+		int iCondencer;
+		iCondencer = GetItem("TOV_MULTIORGANIC");
+		if (iCondencer)
+		{	
+			if (iCondencer>GetVar("TENEBR.CONDENCER")) iCondencer = GetVar("TENEBR.CONDENCER");
+	
+			RemoveItem("TOV_MULTIORGANIC", iCondencer);
+			iCondencer = GetVar("TENEBR.CONDENCER") - iCondencer;
+			SetVar("TENEBR.CONDENCER", iCondencer);
+		}
+	
+		if (!GetVar("TENEBR.NIKEL") && !GetVar("TENEBR.TITAN") && !GetVar("TENEBR.CONDENCER") && !GetVar("TENEBR.1a"))
+		{
+			SetVar("TENEBR.1a");
+			SetQuestPart("TS_L9_J_Q1_1", "TS_L9_J_Q1_2");
+		}
+	}
+}
+
+// При заезде в здание проверяеться выполнил или нет задание и выдает соотвествующие тексты либо герерит задание	
+void proc OnEnterBuild(char item)
+{
+   SetVarChar("CurrentBuild", item);
+   StartScriptEvent("Events\Welcome.src", "OnEnterBuild", item);
+   StartScriptEvent("Events\Upgrades.src", "OnEnterBuild", item);
+
+   CheckGenerated(item);
+   
+   if (!GetVar("DEMO"))
+   {
+//	   if (false)
+		  StartScriptEvent("Clans\Events\EnterBuild.src", "OnEnterBuild", item);
+	   SetVarChar("AIM.CurrentBuild", item);
+   }
+   
+   CheckAIM(item);
+}
+
+void proc OnQuest(char item)
+{
+	//StartScriptEvent("Clans\Events\EnterBuild.src", "OnQuest", item);
+	
+	char sVar;
+	sVar = GetVarChar("CurrentBuild");
+	char sVar1;
+	char sVar2;
+	char sVar3;
+	sVar1 = CONCAT(sVar, ".T1");
+	sVar2 = CONCAT(sVar, ".T2");
+	sVar3 = CONCAT(sVar, ".T3");
+		
+	if ( GetVarChar(sVar1)==item) SetVarChar(sVar1, "BZ");
+	if ( GetVarChar(sVar2)==item) SetVarChar(sVar2, "BZ");
+	if ( GetVarChar(sVar3)==item) SetVarChar(sVar3, "BZ");
+			
+	RemoveQuest(item);
+	gen_quest(item);
+
+	if (GetVar("g_QuestSuggest")>0)
+	{
+	   //Text("Task: "+item);
+	   Text(item+".TASK");
+	   Text("GEN_ACCEPT");
+	   SetCaptureInterface(1);
+	}
+}//end proc 
+
+void proc YES()
+{
+	SetCaptureInterface(0);
+	DeleteText("GEN_ACCEPT");
+	RemoveQuest();
+   
+	int iTypeQ;
+	iTypeQ = GetVar("g_QuestSuggest");
+	SetVar("gen_q", iTypeQ);
+
+	char sQuestID;
+	sQuestID = GetVarChar("g_questid");
+
+	Text( sQuestID + ".GET");
+	bool bTime = true;
+
+	switch(iTypeQ)
+	{
+		case 1:;
+		case 2:	SetPelengPoint(GetVarChar("g_buildtarget"));
+		case 3:
+		{	
+			AddItem(GetVarChar("g_glidertarget"));
+			SetPelengPoint(GetVarChar("g_buildtarget"));
+		};
+		// GEN_FIND
+		case 4:
+			{
+				bTime = false;
+				CreateObjectAt("need_con", "TT_CONTAINER", GetVarChar("g_target"));
+				AddItemToContainer("need_con", "TOV_UNIQUE_CONTAINER");
+				//SetPelengPoint(GetVarChar("g_target"));
+			}
+		// GEN_KILL
+		case 5:
+			{ 
+				SetPelengPoint(GetVarChar("g_glidertarget"));
+				SetVar("g_gliderdie", 0);
+			}
+		// GEN_KILL_1
+		case 6:
+			{
+				SetPelengPoint(GetVarChar("g_glidertarget"));
+				SetVar("g_gliderdie", 0);
+			}
+		case 7:
+			{
+				SetPelengPoint(GetVarChar("g_glidertarget"));
+				SetVar("g_gliderdie", 0);
+			};
+		// GEN_KILL_3
+		case 8:
+			{
+				SetPelengPoint(GetVarChar("g_glidertarget"));
+				bTime = false;
+			};
+		// GEN_MAIL
+		case 9:
+			{
+				SetPelengPoint(GetVarChar("g_buildtarget"));
+				AddItem("TOV_INFORMPAKET");
+			}
+		// GEN_MAIL_1
+		case 10:
+			{
+				SetPelengPoint(GetVarChar("g_buildtarget"));
+				AddItem("TOV_UNIQUE_CONTAINER");
+				bTime = false;
+			}
+		// GEN_MAIL2_2
+		case 11:
+			{
+				AddItem("TOV_INFORMPAKET");
+			}
+		// GEN_TRANS
+		case 12:
+		{
+			char sName;
+			sName = GetVarChar("g_glidertarget");
+			CreateMech(sName, GetVarChar("g_target"), "CFG_PLATFORM");
+			SetMechClan(sName, "ORG_FREE");
+			SetPelengPoint(sName); 
+			SetVar("gen_complete", 0);
+			SetVar("gen_assign", 0);
+			SetVar("GEN_TRANS", 0);
+			bTime = false;
+		}
+		//GEN_TRANS_1
+		case 13:
+		{
+			char sName;
+			sName = GetVarChar("g_glidertarget");
+			CreateMech(sName, GetVarChar("g_target"), "CFG_STARTUP");
+			SetMechClan(sName, "ORG_FREE");			
+			SetPelengPoint(sName); 
+			SetVar("gen_assign", 0);
+			SetVar("gen_complete", 0);
+			SetVar("GEN_TRANS", 0);
+			bTime = false;
+		}
+	} //end case
+
+	if (bTime)
+	{
+		SetVar("g_timeleft", GetVar("g_time"));
+		SetTimer("endhour", 1);
+		SetTimer("endtime", GetVar("g_time"));
+		SetQuest(sQuestID, sQuestID+".JOURNAL", GetVar("g_award"), "endtime");
+	}
+	else
+		SetQuest(sQuestID, sQuestID+".JOURNAL", GetVar("g_award"));
+}//end proc 
+
+// Несогласие взять квест
+void proc NO()
+{
+   SetCaptureInterface(0);
+   DeleteText(GetVarChar("g_questid")+".TASK");
+   DeleteText("GEN_ACCEPT");
+}//end proc
+
+// Функция вызывается при отказе от квеста
+void proc FailGenQuest()
+{
+	fail_quest(false);
+	DeleteText("GEN_DECLINE_BASE");
+	DeleteText("GEN_DECLINE_TUNNEL");	
+	Text("GEN_FAIL");
+	CheckGenerated(GetVarChar("CurrentBuild"));
+}
+

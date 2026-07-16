@@ -1,0 +1,45 @@
+#include "include\AIM.src"
+
+void proc OnKill(char gliderID, char groupID)
+{
+
+	//---Событие срабатывает когда убивают глайдер во время прохождения T_L5_FANT_06---//
+	
+	if (GetVarChar("fant_activeq") == "T_L5_FANT_06" && gliderID == "MORTE-ARTO")
+	{
+		SetVar("T_L5_FANT_06_compl", 1);
+		Text("Q_COMPLETE");
+	}
+	
+	//---Событие срабатывает когда убивают глайдер во время прохождения T_L5_FANT_02---//
+	char glider_clan;
+	glider_clan = GetGliderClan(gliderID);
+	
+	if (GetVarChar("fant_activeq") == "T_L5_FANT_02" && glider_clan == "ORG_FINDERS")
+	{
+		if (GetVar("T_L5_FANT_02_compl") < 20)
+		{
+			SetVar("T_L5_FANT_02_compl", GetVar("T_L5_FANT_02_compl")+1);
+		}
+		else
+		{
+			Text("Q_COMPLETE");			
+		}
+	}
+
+	//---Событие срабатывает когда убивают глайдер во время прохождения T_L3_ARHEYS_02---//
+	if (GetVarChar("arhe_activeq") == "T_L3_ARHEYS_02" && groupID == "T2_L3_ARHEYS_CARAVAN")
+	{
+		SetVar("T_L3_ARHEYS_02_compl", 2);
+		AssignGliderToPlayer("T2_L3_ARHEYS_CARAVAN", 0); 
+		Text("Q_FAIL");
+	}
+
+	//---Событие срабатывает когда убивают глайдер во время прохождения T_L3_ARHEYS_03---//
+	if (GetVarChar("arhe_activeq") == "T_L3_ARHEYS_03" && groupID == "T3_L3_ARCHEYS_RESCUED")
+	{
+		SetVar("T_L3_ARHEYS_03_compl", 2);
+		AssignGliderToPlayer("T3_L3_ARCHEYS_RESCUED", 0); 
+		Text("Q_FAIL");
+	}
+}

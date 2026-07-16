@@ -1,0 +1,27 @@
+#include "include\AIM.cpp"
+
+void proc OnSectorControl(char orgID, char locID)
+{
+	if (orgID=="ORG_PLAYER")
+	{
+		if (!GetVar("DEMO") && !GetVar(locID+".captured"))
+		{
+			if (orgID=="ORG_PLAYER" && !GetVar("AIM.SECTOR.FIRST"))
+			{
+				PlayVideo("Data\Video\captureloc.bik");
+				Dialog("TS_L5_Q5_4");
+				SetQuestPart("TS_L5_J_Q5_1", "TS_L5_J_Q5_4");
+				SetVar("AIM.SECTOR.FIRST");
+			}
+		   
+			SetVar("AIM.SECTOR.CONTROLLED", GetVar("AIM.SECTOR.CONTROLLED")+1);
+				
+			if (GetVar("AIM.SECTOR.CONTROLLED")==2 && GetVar("AIM.NET.NAU.1") && !GetVar("AIM.NET.NAU.2"))
+			{
+				Dialog("TS_L11_Q1_1_4");
+				SetQuestPart("TS_L11_J_Q1_1", "TS_L11_J_Q1_21");
+			}
+		}
+		SetVar(locID+".captured");
+	}
+}
