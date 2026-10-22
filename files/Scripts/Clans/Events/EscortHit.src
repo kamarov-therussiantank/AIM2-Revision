@@ -1,6 +1,0 @@
-#include "include\AIM.src"
-
-void proc OnEscortHit(char gliderID)
-{
-	
-}	
