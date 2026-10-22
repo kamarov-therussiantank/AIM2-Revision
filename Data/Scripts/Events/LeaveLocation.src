@@ -1,0 +1,14 @@
+#include "include\RANDOMQ.cpp"
+
+
+void proc OnLeaveLocation(char locID)
+{
+	//StartScriptEvent("Clans\Events\EnterLocation.src", "OnEnterLocation", locID);
+	if (GetVar("gen_q")!=0)
+		fail_quest(false);
+}	
+
+void proc OnJump(char sLoc1, char sLoc2)
+{
+	PlayVideo("Data\Video\tunnel.bik");
+}

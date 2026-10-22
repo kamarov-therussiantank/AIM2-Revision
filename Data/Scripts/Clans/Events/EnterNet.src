@@ -1,0 +1,105 @@
+#include "include\AIM.src"
+ 
+void proc OnEnterNet(char item)
+{
+	char loc;
+	loc = GetArea;
+//----------------------------------------Выполнение квеста T_L3_ASCENDS_02--------//
+	if (GetVarChar("asce_activiq") == "T_L3_ASCENDS_02")
+	{
+		switch(loc)
+		{
+			case "location10":
+			{
+				if (GetGliderR("TS_GRP_MONCEBER") < 1 || GetGliderClan("TS_GRP_MONCEBER") != "ORG_FORWARD")
+				{
+					if (GetVar("T_L3_ASCENDS_02.cl1") == 0)
+					{
+						Text("Q_MESSAGE_NET.1");
+						SetVar("T_L3_ASCENDS_02_compl", GetVar("T_L3_ASCENDS_02_compl")+1);
+						SetVar("T_L3_ASCENDS_02.cl1", 1);
+					}
+				}
+			}
+			case "location3":
+			{
+				if (GetGliderR("TS_GRP_FATALL") < 1 || GetGliderClan("TS_GRP_FATALL") != "ORG_ARHEYS")
+				{
+					if (GetVar("T_L3_ASCENDS_02.cl2") == 0)
+					{
+						Text("Q_MESSAGE_NET.2");
+						SetVar("T_L3_ASCENDS_02_compl", GetVar("T_L3_ASCENDS_02_compl")+1);
+						SetVar("T_L3_ASCENDS_02.cl2", 1);
+					}
+				}
+			}
+			case "location2":
+			{
+				if (GetGliderR("TS_GRP_MORRANDO") < 1 || GetGliderClan("TS_GRP_MORRANDO") != "ORG_TOLERANS")
+				{
+					if (GetVar("T_L3_ASCENDS_02.cl3") == 0)
+					{
+						Text("Q_MESSAGE_NET.3");
+						SetVar("T_L3_ASCENDS_02_compl", GetVar("T_L3_ASCENDS_02_compl")+1);
+						SetVar("T_L3_ASCENDS_02.cl3", 1);
+					}
+				}
+				if (GetGliderR("TS_GRP_VERCUS") < 1 || GetGliderClan("TS_GRP_VERCUS") != "ORG_NARGOONS")
+				{
+					if (GetVar("T_L3_ASCENDS_02.cl4") == 0)
+					{
+						Text("Q_MESSAGE_NET.4");
+						SetVar("T_L3_ASCENDS_02_compl", GetVar("T_L3_ASCENDS_02_compl")+1);
+						SetVar("T_L3_ASCENDS_02.cl4", 1);
+					}
+				}
+			}
+			case "location6":
+			{
+				if (GetGliderR("ORG_NETRART") < 1 || GetGliderClan("ORG_NETRART") != "ORG_CALMKEEPERS")
+				{
+					if (GetVar("T_L3_ASCENDS_02.cl5") == 0)
+					{
+						Text("Q_MESSAGE_NET.5");
+						SetVar("T_L3_ASCENDS_02_compl", GetVar("T_L3_ASCENDS_02_compl")+1);
+						SetVar("T_L3_ASCENDS_02.cl5", 1);
+					}
+				}
+			}
+		}//end switch
+		
+	}// end if
+	
+	//----------------------------------------Выполнение квеста T_L1_FIREHALF_01--------//
+	if (GetVarChar("fire_activiq") == "T_L1_FIREHALF_01")
+	{
+		switch(loc)
+		{
+			case "location1":
+			{
+					if (GetVar("T_L1_FIREHALF_01.cl1") == 0)
+					{
+						Text("Q_T1_L1_NETMESS1");
+						SetVar("T_L1_FIREHALF_01.cl1", 1);
+					}
+			}
+			case "location2":
+			{
+					if (GetVar("T_L1_FIREHALF_01.cl2") == 0)
+					{
+						Text("Q_T1_L1_NETMESS2");
+						SetVar("T_L1_FIREHALF_01.cl2", 1);
+					}
+			}
+			case "location10":
+			{
+				if (GetVar("T_L1_FIREHALF_01.cl3") == 0)
+				{
+						Text("Q_T1_L1_NETMESS3");
+						SetVar("T_L1_FIREHALF_01.cl3", 1);
+				}
+			}
+		}//end switch
+	}// end if
+	
+} // end PROC OnEnterNet

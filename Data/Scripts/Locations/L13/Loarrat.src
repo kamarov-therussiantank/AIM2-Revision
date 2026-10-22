@@ -1,0 +1,31 @@
+#include "include\AIM.cpp"
+
+void proc OnPickUp(char cItem)
+{
+	// При подъеме этого контейнера - механоида
+	// он говорит о том что уже типа убежден
+	if (!GetVar("LOARRAT.1"))
+	{
+		Dialog("TS_L13_TEXT1_1");
+		SetVar("LOARRAT.1");
+		SetMsgJ("TS_L13_J_TEXT1_2");
+		MarkMsgJ("TS_L13_J_TEXT1_2", 1);
+		SetMechClan(cItem, "ORG_PLAYER");
+	}
+}
+
+void proc OnTalk(char cMech)
+{
+   if (GetMechClan(cMech)!="ORG_PLAYER")
+	   MechSay(cMech, "MSG_M5_TALK");
+   else
+	   MechSay(cMech, "MSG_5GEN_AFTER_PER");
+}
+
+void proc OnTryConvict(char cMech)
+{
+	SetMechClan(cMech, "ORG_PLAYER");
+	SetQuestPart("TS_L13_J_TEXT1_2", "TS_L13_J_TEXT1_3");
+	MarkMsgJ("TS_L13_J_TEXT1_2", 2);	
+	SetVar("AIM.LOARRAT.CONVICTED");
+}

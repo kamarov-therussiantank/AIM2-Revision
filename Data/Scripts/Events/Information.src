@@ -1,0 +1,34 @@
+#include "include\AIM.src"
+
+void proc OnInformation(char cBuild)
+{
+	Text("TS_L5_TEXT2_1");
+	Text("TS_L5_TEXT2_2");
+	Text("TS_L5_TEXT2_3");
+	Text("TS_L5_TEXT2_4");
+	Text("TS_L5_TEXT2_5");
+	Text("TS_L5_TEXT2_6");
+	Text("TS_L5_TEXT2_7");
+	Text("TS_L5_TEXT2_8");
+	Text("TS_L5_TEXT2_14");
+	Text("TS_L5_TEXT2_15");
+	Text("TS_L5_TEXT2_20");
+	Text("TS_L5_TEXT2_22");
+	Text("TS_L5_TEXT2_23");
+	Text("INFO_ARLINGS");
+	Text("INFO_BASIC_SECTORS");
+	Text("INFO_BUILDINGS_SHIELD");
+	Text("INFO_CREATORS");
+	Text("INFO_GENERATION1");
+	Text("INFO_GENERATION2");
+	Text("INFO_GENERATION3");
+	Text("INFO_GENERATION4");
+	Text("INFO_GENERATION5");
+	Text("INFO_MECH");
+	Text("INFO_PEREHOD");
+	Text("INFO_POLYGON");
+	Text("INFO_R_CLANS");
+	Text("INFO_R_SUPER");
+	Text("INFO_ROADS");
+	Text("INFO_SYMBIOT");
+}

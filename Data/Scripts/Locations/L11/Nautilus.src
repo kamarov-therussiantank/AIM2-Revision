@@ -1,0 +1,42 @@
+#include "include\AIM.cpp"
+
+void proc OnTalk(char gliderID)
+{
+	if (!GetItem("TS_ITEM3"))
+		DamageGlider("PLAYER", 10000000);
+
+	// если это первое общение, то
+	if (GetVar("AIM.NET.NAU.2") && !GetVar("AIM.NET.NAU.3"))
+	{
+		Dialog("TS_L11_TEXT2_3");
+		SetQuestPart("TS_L11_J_Q1_1", "TS_L11_J_TEXT2_3");
+		SetVar("AIM.NET.NAU.3");
+	}		
+
+	// Второе общение с Наутилусом после синигр
+	if (GetVar("AIM.NET.SIN.3") && !GetVar("AIM.NET.SIN.4"))
+	{
+		Dialog("TS_L11_TEXT3_2");
+		SetVar("AIM.NET.SIN.4");
+		SetQuestPart("TS_L11_J_Q1_6", "TS_L11_J_TEXT3_1");
+		SetTimer("OnDestroyEffector", 24);
+		SetTimer("OnHour", 1);
+		SetVar("AIM.NAU.HOUR", 24);
+		GliderInvis(gliderID, 1);
+	}
+}
+
+void proc OnDestroyEffector()
+{
+	SetVar("AIM.NAU.DESTROY");
+}
+
+void proc OnHour()
+{
+	int iHour;
+	iHour = GetVar("AIM.NAU.HOUR")-1;
+	if (iHour<0) iHour = 0;
+	SetVar("AIM.NAU.HOUR", iHour);
+	if (iHour)
+		SetTimer("OnHour", 1);
+}

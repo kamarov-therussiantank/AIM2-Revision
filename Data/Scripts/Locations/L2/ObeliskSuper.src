@@ -1,0 +1,84 @@
+#include "include\AIM.src"
+
+void proc OnEnterBuild(char item)
+{
+   if (!GetVar("AIM.OBELISK.1"))
+   {
+	  Text("TS_L2_Q1_0");
+	  AddItem("TS_ITEM1", 1);  
+	  SetVar("AIM.OBELISK.1");
+	  SetQuestPart("TS_L5_J_Q_1", "TS_L2_J_Q1_0");
+	}
+	else
+	{
+		Text("S_OBELISK_WELCOME");
+		StartScriptEvent("Events\EnterBuild.src", "OnEnterBuild", item);
+
+		// Здесь мы даем игроку задание захватить 5 секторов:
+		// 1, 2, 3, 5, 10
+		if (!GetVar("AIM.OBELISK.2"))
+		{
+			Text("TS_L2_Q4_1");
+			SetMsgJ("TS_L2_J_Q4_1");
+			MarkMsgJ("TS_L2_J_Q4_1", 1);
+		}
+
+		int iCapture;
+		iCapture = 0;
+		if (GetVar("location1.captured"))
+		{ 
+			//Text("Location1 captured");
+			iCapture = iCapture + 1;
+		}
+		if (GetVar("location2.captured"))		
+		{ 
+			//Text("Location2 captured");
+			iCapture = iCapture + 1;
+		}
+		if (GetVar("location3.captured"))
+		{ 
+			//Text("Location3 captured");
+			iCapture = iCapture + 1;
+		}
+		if (GetVar("location5.captured"))
+		{ 
+			//Text("Location5 captured");
+			iCapture = iCapture + 1;
+		}
+		
+		if (GetVar("location6.captured"))
+		{ 
+			//Text("Location6 captured");
+			iCapture = iCapture + 1;
+		}
+		if (GetVar("location10.captured"))
+		{ 
+			//Text("Location10 captured");
+			iCapture = iCapture + 1;
+		}
+		//TODO: проверяем захват локаций
+		if (iCapture>=5)
+		{
+			Text("TS_L2_Q4_2");
+			if (!GetVar("AIM.OBELISK.3"))
+			{
+				SetQuestPart("TS_L2_J_Q4_1", "TS_L2_J_Q4_2");
+				SetVar("AIM.OBELISK.3");
+			}
+		}
+		else
+			if (GetVar("AIM.OBELISK.2"))
+				Text("TS_L2_Q4_11");
+
+		if (!GetVar("AIM.OBELISK.2"))
+			SetVar("AIM.OBELISK.2");
+	}
+}
+
+void proc EndGame2()
+{
+	PlayVideo("Data\Video\endgame.bik");
+	PlayVideo("Data\Video\outro.bik");
+	PlayVideo("Data\Video\theend.bik");	
+	EndGame();
+}

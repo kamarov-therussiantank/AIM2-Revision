@@ -1,0 +1,63 @@
+#include "include\AIM.cpp"
+
+void proc OnTalk(char gliderID)
+{
+	StartScriptEvent("Clans\Events\Talk.src", "OnTalk", gliderID, cMech);
+	
+	int iValue;
+	iValue = GetVar("gen_q"); 
+	//GEN_MAIL_2
+	if (iValue == 11 && GetVarChar("g_glidertarget") == gliderID && GetItem("TOV_INFORMPAKET"))
+	{
+		RemoveItem("TOV_INFORMPAKET");
+		Text("MSG_GEN_RECEIVE");
+		Text("INT_QUEST_COMPLETE");
+		StopTimer("endtime");
+	}
+	  
+	  if (( iValue == 12 || iValue == 13) 
+		  && (GetVarChar("g_glidertarget") == gliderID) && (GetVar("gen_assign") != 1) &&
+		  GetVar("gen_complete")==0)
+	  {
+		char glidertarget;
+		glidertarget = GetVarChar("g_glidertarget");
+		AssignGliderToPlayer(glidertarget, 1); 
+		Text("MSG_GEN_LEADME");
+		SetVar("gen_assign", 1);
+		char endway;
+		endway = GetVarChar("g_targetend");
+		SetSensorNPC(endway, glidertarget);
+		SetPelengPoint(endway, 0);
+	}	
+
+
+	if (RandomInt(5)==1)
+	{
+		if (GetMechClan(gliderID)== GetMechClan("PLAYER"))
+		{
+			MechSay(gliderID, "MSG_LOOK_FRIEND");
+		}
+		else
+		{
+			int iRel;
+			iRel = GetRelation(gliderID, "PLAYER");
+			
+			if (GetMechClan(gliderID) == "ORG_SENTINELS")
+			{
+				if (iRel > 5)
+					MechSay(gliderID, "MSG_SEN_FRIENDLY");
+				else if (iRel < -5)
+					MechSay(gliderID, "MSG_SEN_ENEMY");
+				else
+					MechSay(gliderID, "MSG_SEN_NEUTRAL");
+			}
+			else
+			{
+				if (iRel < -5)
+					MechSay(gliderID, "MSG_LOOK_ENEMY");
+				else
+					MechSay(gliderID, "MSG_LOOK_NEUTRAL");
+			}
+		}
+	}
+}

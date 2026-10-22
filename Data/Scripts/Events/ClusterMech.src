@@ -1,0 +1,46 @@
+#include "include\AIM.cpp"
+
+void proc EndGame1()
+{
+	SetCaptureInterface(0);
+	PlayVideo("Data\Video\endgame.bik");
+	PlayVideo("Data\Video\outro.bik");
+	PlayVideo("Data\Video\theend.bik");
+	EndGame();
+}
+
+void proc EndLink()
+{
+	SetCaptureInterface(0);
+	PlayVideo("Data\Video\endgame.bik");
+	PlayVideo("Data\Video\outro.bik");
+	PlayVideo("Data\Video\theend.bik");
+	EndGame();
+}
+
+void proc OnClusterMech(char cMech, char cBuild)
+{
+
+	//  В коде прописывается, что в бункер устанавливаются только механоиды >= 5-го поколения.
+	//  так что здесь мы можем не проверять поколение
+	if (cBuild=="B_L5_SBUNKER")
+	{
+		// Если число механоидов == 13, то конец игры
+		if (GetMechInCluster(cBuild, "ORG_PLAYER")==13)
+		{
+			EndGame1();
+		}
+		else
+		// Если число механоидов == 13, то спрашиваем игрока, не хочет ли он присоединиться..
+		if (GetMechInCluster(cBuild, "ORG_PLAYER")==12)
+		{
+			SetVar("AIM.SBUNKER.12");
+			Dialog("TS_L5_TEXT8_2");
+		}
+		else
+		{
+			SetVar("AIM.MECH.LEFT", 13-GetMechInCluster(cBuild, "ORG_PLAYER"));
+			Dialog("TS_L5_TEXT8_1");
+		}
+	}
+}

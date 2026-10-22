@@ -1,0 +1,93 @@
+#include "include\AIM.src"
+
+void proc OnKillGroup(char GroupMechID)
+{
+
+	//---Событие срабатывает когда убили группу во время прохождения T_L6_FINDERS_01---//
+	char activq_find;
+	activq_find = GetVarChar("finders_activeq");
+	
+	if (activq_find == "T_L6_FINDERS_01" && (GroupMechID == "GRP_L6_FIN01_MERC1" || GroupMechID == "GRP_L6_FIN01_MERC2"))
+	{
+		SetVar("T_L6_FINDERS_01_compl", GetVar("T_L6_FINDERS_01_compl")+1);
+		Text("Q_COMPLETE");
+	}
+	
+	//---Событие срабатывает когда убили группу во время прохождения T_L5_FANT_03---//
+	char activq;
+	activq = GetVarChar("fant_activeq");
+	
+	if (activq == "T_L5_FANT_03" && GroupMechID == "T_GRP_RO-KEEL")
+	{
+		SetVar("T_L5_FANT_03_compl", 1);
+		Text("Q_COMPLETE");
+	}
+	
+	//---Событие срабатывает когда убили группу во время прохождения T_L5_FANT_04---//
+	if (activq == "T_L5_FANT_04" && GroupMechID == "T_L5_FANT_04_FINDERS1")
+	{
+		SetVar("T_L5_FANT_04_compl", 1);
+		Text("Q_COMPLETE");
+	}
+	if (activq == "T_L5_FANT_04" && GroupMechID == "T_L5_FANT_04_FINDERS2")
+	{
+		SetVar("T_L5_FANT_04_compl", 1);
+		Text("Q_COMPLETE");
+	}
+	if (activq == "T_L5_FANT_04" && GroupMechID == "T_L5_FANT_04_FINDERS3")
+	{
+		SetVar("T_L5_FANT_04_compl", 1);
+		Text("Q_COMPLETE");
+	}
+	if (activq == "T_L5_FANT_04" && GroupMechID == "T_L5_FANT_04_FINDERS4")
+	{
+		SetVar("T_L5_FANT_04_compl", 1);
+		Text("Q_COMPLETE");
+	}
+	
+	//------------------------убийство при квесте T_L2_TOLERANS_02----//
+	char activq_toler;
+	activq_toler = GetVarChar("toler_activeq");
+	
+	if (activq_toler == "T_L6_FINDERS_02" && GroupMechID == "T2_L2_TOLERANCE_HIDDEN" && GetVar("T_L6_FINDERS_02_compl") == 0)
+	{
+		SetVar("T_L2_TOLERANS_02_compl", 1);
+		AssignGliderToPlayer("T2_L2_TOLERANCE_TOL", 0);
+		Text("Q_COMPLETE");
+	}
+	
+	//------------------------убийство при квесте T_L2_TOLERANS_04----//
+	char activq_toler2;
+	activq_toler2 = GetVarChar("toler_activeq");
+	
+	if (activq_toler2 == "T_L2_TOLERANS_04" && (GroupMechID == "T4_L2_GROUP1" || GroupMechID == "T4_L2_GROUP2" || GroupMechID == "T4_L2_GROUP3" || GroupMechID == "T4_L2_GROUP4"))
+	{
+		SetVar("T_L2_TOLERANS_04_compl", GetVar("T_L2_TOLERANS_04_compl")+1);
+	}
+	
+	//---Событие срабатывает когда убили группу во время прохождения T_L6_CALMKEEPERS_05---//
+	char activq_calm;
+	activq_calm = GetVarChar("calm_activeq");
+	
+	if (activq_calm == "T_L6_CALMKEEPERS_05" && (GroupMechID == "GRP_T_L6_KEEP_05_FOR1" || GroupMechID == "GRP_T_L6_KEEP_05_FOR2" || GroupMechID == "GRP_T_L6_KEEP_05_FOR3" || GroupMechID == "GRP_T_L6_KEEP_05_FOR4" || GroupMechID == "GRP_T_L6_KEEP_05_FOR5" || GroupMechID == "GRP_T_L6_KEEP_05_FOR6"))
+	{
+		SetVar("T_L6_CALMKEEPERS_05_compl", GetVar("T_L6_FINDERS_01_compl")+1);
+		if (IsGroupKilled("GRP_T_L6_KEEP_05_PAT") == 0 && GetVar("T_L6_FINDERS_01_compl") == 6)
+		{
+			Text("MSG_T_L6_CALMKEEPERS_05_2");
+			Text("Q_COMPLETE");
+		}
+		else
+		{
+			SetTimer("T_L6_CALMKEEPERS_05_time", 0.1);
+		}
+	}
+}
+
+//------------------------таймер на квест T_L6_CALMKEEPERS_05----//
+void proc T_L6_CALMKEEPERS_05_time()
+{
+//	Text(CONCAT(item, ".TASK"));
+	CreateGroup(CONCAT("GRP_T_L6_KEEP_05_FOR", GetVar("T_L6_FINDERS_01_compl")+1));
+	GliderGo(CONCAT("GRP_T_L6_KEEP_05_FOR", GetVar("T_L6_FINDERS_01_compl")+1), "POINT_T_L6_CALMKEEP_05_1"); 
+}

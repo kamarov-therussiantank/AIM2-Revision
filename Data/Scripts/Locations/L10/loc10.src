@@ -1,0 +1,44 @@
+#include "include\AIM.src"
+
+void proc OnEnterLocation(char item)
+{
+	StartScriptEvent("Events\EnterLocation.src", "OnEnterLocation", item);
+
+	if (!GetVar("location10.FISRT"))
+	{
+		CreateGroup("TS_GRP_MONCEBER");
+		SetMechGeneration("TS_GRP_MONCEBER", 5);
+		SetClanLider("ORG_FORWARD", "TS_GRP_MONCEBER");
+		
+		SetVar("location10.FISRT");
+
+		CreateGroup("TALLARCET");
+		SetMechGeneration("TALLARCET", 4);
+		SetRelation("TALLARCET", "PLAYER", 10);
+	}
+	
+	SetTimer("OnWorldTimeProcess", 0.5);
+}
+
+void proc OnWorldTimeProcess(char item)
+{
+	
+	// The Sentinels relation towards other clans, and likewise
+	SetClanRelation("ORG_HIDDEN", "ORG_ARHEYS", -10);
+	SetClanRelation("ORG_HIDDEN", "ORG_FORWARD", 10);
+	SetClanRelation("ORG_HIDDEN", "ORG_FREE", -10);
+	
+	// The Arheys relation towards other clans, and likewise
+	SetClanRelation("ORG_ARHEYS", "ORG_FORWARD", -10);
+	SetClanRelation("ORG_ARHEYS", "ORG_FREE", -10);
+	SetClanRelation("ORG_ARHEYS", "ORG_PLAYER", -10);
+	
+	// The Free Ones relation towards other clans
+	SetClanRelation("ORG_FREE", "ORG_FORWARD", -10);
+	SetTimer("OnWorldTimeProcess2", 0.5);
+}
+
+void proc OnWorldTimeProcess2(char item)
+{
+	SetTimer("OnWorldTimeProcess", 0.5);
+}

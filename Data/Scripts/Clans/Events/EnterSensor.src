@@ -1,0 +1,82 @@
+#include "include\AIM.src"
+
+void proc OnEnterSensor(char itemID)
+{
+	char activq;
+	activq = GetVarChar("fant_activeq");
+	
+	if (activq == "T_L5_FANT_07" && itemID == "T_L5_FANT_07_POINT01" && GetVar("T_L5_FANT_07_compl") == 0)
+	{
+		SetVar("T_L5_FANT_07_compl", 1);
+		Text("MSG_T_L5_FANT_07_1");
+		SetPelengPoint("T_L5_FANT_07_POINT02");
+	}
+	
+	if (activq == "T_L5_FANT_07" && itemID == "T_L5_FANT_07_POINT02" && GetVar("T_L5_FANT_07_compl") == 1)
+	{
+		SetVar("T_L5_FANT_07_compl", 2);
+		Text("MSG_T_L5_FANT_07_1");
+		SetPelengPoint("T_L5_FANT_07_POINT03");
+	}
+	
+	if (activq == "T_L5_FANT_07" && itemID == "T_L5_FANT_07_POINT03" && GetVar("T_L5_FANT_07_compl") == 2)
+	{
+		SetVar("T_L5_FANT_07_compl", 3);
+		Text("MSG_T_L5_FANT_07_1");
+		SetPelengPoint("T_L5_FANT_07_POINT04");
+	}
+	
+	if (activq == "T_L5_FANT_07" && itemID == "T_L5_FANT_07_POINT04" && GetVar("T_L5_FANT_07_compl") == 3)
+	{
+		SetVar("T_L5_FANT_07_compl", 4);
+		Text("MSG_T_L5_FANT_07_1");
+		SetPelengPoint("T_L5_FANT_07_POINT05");
+	}
+	
+	if (activq == "T_L5_FANT_07" && itemID == "T_L5_FANT_07_POINT05" && GetVar("T_L5_FANT_07_compl") == 4)
+	{
+		SetVar("T_L5_FANT_07_compl", 5);
+		Text("MSG_T_L5_FANT_07_1");
+		SetPelengPoint("T_L5_FANT_07_POINT06");
+	}
+	
+	if (activq == "T_L5_FANT_07" && itemID == "T_L5_FANT_07_POINT06" && GetVar("T_L5_FANT_07_compl") == 5)
+	{
+		SetVar("T_L5_FANT_07_compl", 6);
+		Text("MSG_T_L5_FANT_07_2");
+	}
+	
+	//-----¬ыполнение квеста T_L11_RECKONERS_01 при вьезде в сенсор-------//
+	if (GetVarChar("reck_activeq") == "T_L11_RECKONERS_01" && GetVar("T_L11_RECKONERS_01_compl1") == 2 && itemID == "T1_L11_TANKPOINT1")
+	{
+		SetVar("T_L11_RECKONERS_01_compl1", 1);
+		SetVar("T_L11_RECKONERS_01_compl", GetVar("T_L11_RECKONERS_01_compl")+1);
+		Text("MSG_T1_L11_TANKRUSH1");
+	}
+	if (GetVarChar("reck_activeq") == "T_L11_RECKONERS_01" && GetVar("T_L11_RECKONERS_01_compl2") == 2 && itemID == "T1_L11_TANKPOINT2")
+	{
+		SetVar("T_L11_RECKONERS_01_compl2", 1);
+		SetVar("T_L11_RECKONERS_01_compl", GetVar("T_L11_RECKONERS_01_compl")+1);
+		Text("MSG_T1_L11_TANKRUSH2");
+	}
+	if (GetVarChar("reck_activeq") == "T_L11_RECKONERS_01" && GetVar("T_L11_RECKONERS_01_compl3") == 2 && itemID == "T1_L11_TANKPOINT3")
+	{
+		SetVar("T_L11_RECKONERS_01_compl3", 1);
+		SetVar("T_L11_RECKONERS_01_compl", GetVar("T_L11_RECKONERS_01_compl")+1);
+		Text("MSG_T1_L11_TANKRUSH3");
+	}
+	//-----¬ыполнение квеста T_L10_FORWARD_01 при вьезде в сенсор-------//
+	if (GetVarChar("forw_activeq") == "T_L10_FORWARD_01" && GetVar("T_L10_FORWARD_01_compl1") == 1 && itemID == "T1_L10_POINT_MEGAGRIB")
+	{
+		SetVar("T_L10_FORWARD_01_compl1", 2);
+		Text("MSG_T1_L10_START_REC");
+		SetTimer("T_L10_FORWARD_01_time", 0.2);
+	}
+}
+
+
+void proc T_L10_FORWARD_01_time()
+{
+	Text("MSG_T1_L10_END_REC");
+	SetVar("T_L10_FORWARD_01_compl", 1);
+}

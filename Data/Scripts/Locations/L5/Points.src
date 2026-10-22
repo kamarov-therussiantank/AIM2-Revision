@@ -1,0 +1,31 @@
+#include "include\AIM.cpp"
+
+void proc OnEnterSensor(char cItem)
+{
+	switch(cItem)
+	{
+	case "TS_L5_POINT1":
+		{
+			SetTimer("ObserverTalk", 0.02);
+		}
+	}
+}
+
+void proc ObserverTalk()
+{	
+	DeleteObject("B_L5_OBSERVER");
+	DeleteObject("B_L5_OBSERVER2");
+	
+	Dialog("TS_L5_TEXT4_1");
+
+	SetCaptureInterface(1);
+	//SetPelengPoint("");
+	RemovePeleng("TS_L5_POINT1");
+}
+
+
+void proc EndDialog()
+{
+	SetQuestPart("TS_L5_J_Q_2", "TS_L5_J_TEXT4_1");
+	MarkMsgJ("TS_L5_J_Q_2", 2);	
+}

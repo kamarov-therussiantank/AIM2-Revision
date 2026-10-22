@@ -1,0 +1,330 @@
+#include "include\AIM.src"
+
+// AIM.MERC.CURQN - текущий квест
+// AIM.MERC.CURQ  - текущий квест
+// AIM.MERC.ACTQ  - активный квест
+// AIM.MERC.ISQ  - активный квест
+
+//
+// Квест T_L5_MERC_05 выкинут до лучших времен..
+//
+
+void proc CheckQuest(char QuestID)
+{
+	switch(QuestID)
+	{
+		// Доставка особого груза 
+		case "T_L5_MERC_06":
+		{
+			if (GetVar("T_L5_MERC_06_comp") == 2)
+			{
+				RemoveItem("TOV_T_L5_MERC_06_KON2", 1);
+				RemoveItem("TOV_T_L5_MERC_06_KON1", 1);
+				Text(QuestID+".COMPL");
+				AddAmount(AMOUNT_ENERGY, GetVar("merc_award"));
+				AddAmount(AMOUNT_RATING_QUEST, GetVar("merc_award")/20);
+				SetVar("AIM.MERC.ISQ", 0);
+				CompleteQuest(QuestID);
+			}//end if
+		} 
+		
+		// Привезти кристалл с записью данных
+		case "T_L5_MERC_08":
+		{
+			if (GetVar("compl_merc08") == 1)
+			{
+				Text(QuestID+".COMPL");
+				RemoveItem("TOV_T_L5_MERC_08_CRYSTAL");
+				AddAmount(AMOUNT_ENERGY, GetVar("merc_award"));
+				AddAmount(AMOUNT_RATING_QUEST, GetVar("merc_award")/20);
+				SetVar("AIM.MERC.ISQ", 0);
+				CompleteQuest(QuestID);
+			}
+			else
+			// если выполнен не правильно то удаляем его и ставим его как проваленый------------//		
+			if (GetVar("compl_merc08") == 2)
+			{
+
+				Text(QuestID+".FAIL");
+				if (GetItem("TOV_T_L5_MERC_08_CRYSTAL"))
+					RemoveItem("TOV_T_L5_MERC_08_CRYSTAL");
+				SetVar("AIM.MERC.ISQ", 0);
+				FailQuest(QuestID);
+			}
+		} 
+		
+//----------------------------------------- 4й квест меркаторов
+		// Поссорить все кланы с искателями // "T_L5_MERC_01" 
+		case "T_L5_MERC_01":
+		{
+			int need_war = 3;
+			int have_war = 0;
+			if (IsClanDead("ORG_SURVIVORS") == 0 && IsClanDead("ORG_FINDERS") == 0)
+			{
+				if (GetClanRelation("ORG_FINDERS", "ORG_SURVIVORS") <= -5)	
+					have_war = have_war+1;	// Если клан был поссорен с нужным для нас тогда плюсуем сумму которую имеем
+			}
+			else 
+				need_war = need_war - 1;	// Если клан был убит тогда отнимаем нужную сумму
+	
+			if (IsClanDead("ORG_FANTOMS") == 0 && IsClanDead("ORG_FINDERS") == 0)
+			{
+				if (GetClanRelation("ORG_FINDERS", "ORG_FANTOMS") <= -5)	
+					have_war = have_war+1;  // Если клан был поссорен с нужным для нас тогда плюсуем сумму которую имеем
+			}
+			else 
+				need_war = need_war - 1;	// Если клан был убит тогда отнимаем нужную сумму
+		
+			if (IsClanDead("ORG_HIDDEN") == 0 && IsClanDead("ORG_FINDERS") == 0)
+			{
+				if (GetClanRelation("ORG_FINDERS", "ORG_HIDDEN") <= -5)	
+					have_war = have_war+1;  // Если клан был поссорен с нужным для нас тогда плюсуем сумму которую имеем
+			}
+			else 
+				need_war = need_war - 1;	// Если клан был убит тогда отнимаем нужную сумму
+	
+			if (need_war <= have_war)		// Если имеющаяся сумма больше или равна нужной нам тогда квест завершен
+			{
+				Text(QuestID+".COMPL");
+				AddAmount(AMOUNT_ENERGY, GetVar("merc_award"));
+				AddAmount(AMOUNT_RATING_QUEST, GetVar("merc_award")/20);
+				SetVar("AIM.MERC.ISQ", 0);
+				CompleteQuest(QuestID);
+			}
+		} 
+		
+//----------------------------------------- 5й квест меркаторов
+		// Посорить искателей с хранителями покоя // "T_L5_MERC_03" 
+		case "T_L5_MERC_03":
+		{
+			if (GetClanRelation("ORG_FINDERS", "ORG_CALMKEEPERS") <= -5)
+			{
+				Text(QuestID+".COMPL");
+				AddAmount(AMOUNT_ENERGY, GetVar("merc_award"));
+				AddAmount(AMOUNT_RATING_QUEST, GetVar("merc_award")/20);
+				SetVar("AIM.MERC.ISQ", 0);
+				CompleteQuest(QuestID);
+			}
+		} 
+		
+//----------------------------------------- 6й квест меркаторов
+		// Пресечь развитие Искателей //T_L5_MERC_04 
+		case "T_L5_MERC_04":
+		{
+			if (GetVar("T_L5_MERC_04_fail")==1) // Если квест был провален
+			{
+				Text(QuestID+".FAIL");
+				SetVar("AIM.MERC.ISQ", 0);
+				FailQuest(QuestID);
+			}
+			else
+			if (GetVar("T_L5_MERC_04_compl") == 1)
+			{
+				Text(QuestID+".COMPL");
+				AddAmount(AMOUNT_ENERGY, GetVar("merc_award"));
+				AddAmount(AMOUNT_RATING_QUEST, GetVar("merc_award")/20);
+				SetVar("AIM.MERC.ISQ", 0);
+				CompleteQuest(QuestID);
+			}
+		} 
+		
+//----------------------------------------- 7й квест меркаторов
+		//Обеспечить работоспособность строений //T_L5_MERC_05 
+		case "T_L5_MERC_05":
+		{
+			if (GetVar("T_L5_MERC_05_fail")==1) // Если квест был провален
+			{
+				Text(QuestID+".FAIL");
+				SetVar("AIM.MERC.ISQ", 0);
+				FailQuest(QuestID);
+			}
+			else											// Если квест еще не завершен
+			if (GetVar("T_L5_MERC_05_compl") == 1)
+			{
+				Text(QuestID+".COMPL");
+				AddAmount(AMOUNT_ENERGY, GetVar("merc_award"));
+				AddAmount(AMOUNT_RATING_QUEST, GetVar("merc_award")/20);
+				SetVar("AIM.MERC.ISQ", 0);
+				CompleteQuest(QuestID);
+			}
+		} 
+	} // end switch to case QuestID
+	
+	if ( GetVar("AIM.MERC.ISQ") )
+		Text(QuestID+".NOTEND");
+
+} // CheckQuest
+
+
+void proc OnEnterBuild(char item)
+{
+	// Если задание есть, то проверяем его выполнение
+	if (GetVar("AIM.MERC.ISQ")) 
+		CheckQuest(GetVarChar("AIM.MERC.ACTQ"));
+	
+	// если задания нет, то пытаемся выдать другое. 
+//------------Проверяем нет ли активного квеста меркаторов и если нету то даем тот который еще не выполнялся------------//
+	
+	if (!GetVar("AIM.MERC.ISQ"))
+	{
+		int haveq;
+		haveq = GetVar("AIM.MERC.CURQN");
+		// выбор квеста	
+		switch(haveq) 
+		{	
+			case 0: Quest("T_L5_MERC_06");
+			case 6: Quest("T_L5_MERC_07");
+			case 7: Quest("T_L5_MERC_08");
+			case 8: Quest("T_L5_MERC_04");	// Не дать захватить строение
+			case 4: Quest("T_L5_MERC_01");	// Посорить кого-то здесь.
+			case 1: 
+			//Quest("T_L5_MERC_05");  // Не дать остановиться строению.
+			//case 5: 
+				Quest("T_L5_MERC_03");	// Посорить в другом секторе.
+		} //end switch
+	} //end if
+}// end proc
+
+
+// Вводим переменные влияющие на текст задания до вывода текста например награда
+void proc take_quest(char item)
+{
+	switch(item)
+	{
+	case "T_L5_MERC_01":	// Поссорить тут искателей со всеми
+			SetVar("merc_award", 25000);
+		case "T_L5_MERC_03":	// Поссорить искателей  другом секторе
+			SetVar("merc_award", 50000);
+		case "T_L5_MERC_04":	// Не дать заъватить строение
+			SetVar("merc_award", 10000);
+		case "T_L5_MERC_05":
+			SetVar("merc_award", 50000);
+		case "T_L5_MERC_06":	// Отвезти контейнеры на 2 завода
+			SetVar("merc_award", 2000);
+		case "T_L5_MERC_07":	// Отвезти контейнер в бункер супера
+			SetVar("merc_award", 3000);
+		case "T_L5_MERC_08":	// Разведать обстановку
+			SetVar("merc_award", 5000);
+	}//end switch
+	SetVarChar("AIM.MERC.CURQ", item);
+}//end proc
+
+//-------При нажатии на текст задания в правом верхнем окошке срабатывает эта функция---///
+void proc OnQuest(char item)
+{
+	RemoveQuest(item);
+	take_quest(item);
+		
+	Text(item+".TASK");
+	
+	if (GetVar("AIM.TESTING"))
+	  Text("GEN_ACCEPT");
+	else
+	  Text("T_ACCEPT");
+}//end proc
+
+//-----После вывода текста, если в тексте выбрали согласие на выполнение задания тогда эта функция----///
+void proc YES()
+{
+	char mercQC;
+	mercQC = GetVarChar("AIM.MERC.CURQ");
+
+	DeleteText("T_ACCEPT");
+
+	CloseText(mercQC+".TASK");
+	Text(mercQC+".GET");
+	SetVarChar("AIM.MERC.ACTQ", mercQC);
+	SetVar("AIM.MERC.ISQ", 1);
+	SetQuest(mercQC, mercQC+".JOURNAL", GetVar("merc_award") );
+
+	switch(mercQC)
+	{
+		case "T_L5_MERC_01":
+		{
+			SetVar("AIM.MERC.CURQN", 1);
+		}
+		case "T_L5_MERC_03":
+		{
+			SetVar("AIM.MERC.CURQN", 3);
+		}
+		case "T_L5_MERC_04":
+		{
+			SetVar("AIM.MERC.CURQN", 4);
+			SetTimer("T_L5_MERC_04_HOUR", 1);
+			SetVar("AIM.MERC.04.HOUR", 25);
+			SetTimer("T_L5_MERC_04_time", 25);
+		}
+		case "T_L5_MERC_05":
+		{
+			SetVar("AIM.MERC.CURQN", 5);
+			SetTimer("T_L5_MERC_05_time", 35);
+			SetBuildGoods("B_L5_BASE5", "TOV_ZERO_REACTOR", 1); 
+		}
+		case "T_L5_MERC_06":
+		{
+			SetVar("AIM.MERC.CURQN", 6);
+			AddItem("TOV_T_L5_MERC_06_IPAK02");
+			AddItem("TOV_T_L5_MERC_06_IPAK01");
+			SetPelengPoint("B_L5_PLANT_PF");
+			SetPelengPoint("B_L5_PLANT_RM");
+		}
+		case "T_L5_MERC_07":
+		{
+			SetVar("AIM.MERC.CURQN", 7);
+			AddItem("TOV_T_L5_MERC_07");
+			SetPelengPoint("B_L5_SBUNKER");
+		}
+		case "T_L5_MERC_08":
+		{
+			SetVar("AIM.MERC.CURQN", 8);
+			AddItem("TOV_T_L5_MERC_08_CRYSTAL");
+			SetPelengPoint("B_L5_BASE1");
+			SetSensor("B_L5_BASE1"); 
+		}
+	} //end switch
+} //end proc
+
+
+//-----Эта функция срабатывает по таймеру для квеста T_L5_MERC_04 при его завершении----///
+void proc T_L5_MERC_04_time()
+{
+	if (GetVar("T_L5_MERC_04_fail")==0)
+	{
+		SetVar("T_L5_MERC_04_compl", 1);
+		Text("Q_COMPLETE");
+	}
+} //end proc
+
+void proc T_L5_MERC_04_HOUR()
+{
+	int iHour;
+	iHour = GetVar("AIM.MERC.04.HOUR")-1;
+	SetVar("AIM.MERC.04.HOUR", iHour);
+	if (iHour>0)
+		SetTimer("T_L5_MERC_04_HOUR", 1);
+}
+
+//-----Эта функция срабатывает по таймеру для квеста T_L5_MERC_05 при его завершении----///
+void proc T_L5_MERC_05_time()
+{
+	if (GetVar("T_L5_MERC_05_fail")==0)
+	{
+		SetVar("T_L5_MERC_04_compl", 1);
+		Text("Q_COMPLETE");
+	}
+} //end proc
+
+//-----После вывода текста, если в тексте выбрали отказ от задания тогда эта функция----///
+void proc NO()
+{
+	ClearWindow();
+} //end proc
+
+
+//----Тестовая функция чтобы проверять удачное выполнение квестов, при срабатывании устанавливает выбранному квесту что он выполнен//
+void proc test_funk()
+{
+	ClearWindow();
+	Text("TEST TEST TEST TEST");
+	SetClanRelation("ORG_FINDERS", "ORG_CALMKEEPERS", -11); 
+} //end proc

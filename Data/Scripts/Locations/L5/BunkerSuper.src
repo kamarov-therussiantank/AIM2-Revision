@@ -1,0 +1,34 @@
+#include "include\AIM.cpp"
+
+void proc OnEnterBuild(char item)
+{
+   if (!GetVar("AIM.BUNKER.1"))
+   {
+	  SetCaptureInterface();
+	  Text("TS_L5_TEXT3_1");
+	  SetVar("AIM.BUNKER.1");
+	  return;
+   }
+
+   Text("S_BUNKER_WELCOME");
+   StartScriptEvent("Events\EnterBuild.src", "OnEnterBuild", item);
+			  
+   if ((GetVarChar("AIM.MERC.ACTQ") == "T_L5_MERC_07") && 
+	   (GetItem("TOV_T_L5_MERC_07") != 0))
+   {
+	   Text("T_L5_MERC_07.COMPL");
+	   SetVar("AIM.MERC.ISQ", 0);
+	   RemoveItem("TOV_T_L5_MERC_07", 1);
+	   AddAmount(AMOUNT_ENERGY, GetVar("merc_award"));
+	   CompleteQuest("T_L5_MERC_07");
+	   //SetPelengPoint("B_L5_BASE2");
+   }
+}
+
+void proc TS_L5_J_Q2_Next()
+{
+   SetCaptureInterface(0);
+   OnEnterBuild( "B_L5_SBUNKER" );
+   SetQuestPart("TS_L5_J_Q_1", "TS_L5_J_Q2_0");
+   SetQuestPart("TS_L5_J_Q_1", "TS_L5_J_Q2_1");
+}

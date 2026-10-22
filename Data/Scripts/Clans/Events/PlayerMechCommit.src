@@ -1,0 +1,39 @@
+#include "include\AIM.src"
+
+void proc OnPlayerMechCommit(char MechID, char buildID)
+{
+	int rating_glider;
+	rating_glider = GetGliderR(MechID);
+	char glider_clan;
+	glider_clan = GetGliderClan(MechID); 
+	char build;
+	build = buildID;
+	char build_clan;
+	build_clan = GetBuildClan(build); 
+
+//-----------------------------Здача механойдов при квесте T_L6_CALMKEEPERS_02------//
+	char activq_calm;
+	activq_calm = GetVarChar("calm_activeq");	
+	if (activq_calm == "T_L6_CALMKEEPERS_02" && rating_glider >= 7 && glider_clan == "ORG_FINDERS" && build_clan == "ORG_CALMKEEPERS")
+	{
+		SetVar("T_L6_CALMKEEPERS_02_compl", GetVar("T_L6_CALMKEEPERS_02_compl")+1);
+		SetVar("calm_compl", 10 - GetVar("T_L6_CALMKEEPERS_02_compl"));
+	}
+//-----------------------------Здача механойдов при квесте T_L6_TOLERANS_01------//
+	if (GetVarChar("toler_activeq") == "T_L6_TOLERANS_01" && rating_glider >= 6 && glider_clan == "ORG_FREE" && build_clan == "ORG_TOLERANS")
+	{
+		SetVar("T_L6_TOLERANS_01_compl", GetVar("T_L6_TOLERANS_01_compl")+1);
+		SetVar("toler_compl", 10 - GetVar("T_L6_TOLERANS_01_compl"));
+	}
+//-----------------------------Здача механойдов при квесте T_L1_FIREHALF_02------//
+	if (GetVarChar("fire_activeq") == "T_L1_FIREHALF_02" && glider_clan == "ORG_FREE" && build_clan == "ORG_FIREHALF")
+	{
+		SetVar("T_L1_FIREHALF_02_compl", GetVar("T_L1_FIREHALF_02_compl")+1);
+		SetVar("fire_compl", 25 - GetVar("T_L1_FIREHALF_02_compl"));
+	}
+//-----------------------------Здача механойдов при квесте T_L11_RECKONERS_04------//
+	if (GetVarChar("reck_activeq") == "T_L11_RECKONERS_04" && (MechID == "GRP_MIRAND" || MechID == "GRP_TALLARCET" || MechID == "GRP_DERCINT" || MechID == "GRP_MOXXAART"))
+	{
+		SetVar("T_L11_RECKONERS_04_compl", GetVar("T_L11_RECKONERS_04_compl")+1);
+	}
+}

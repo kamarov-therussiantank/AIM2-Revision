@@ -1,0 +1,325 @@
+#include "include\AIM.cpp"
+
+void proc Nau1()
+{
+	if (!GetVar("AIM.NET.NAU.1"))
+	{
+		CloseText("TS_L11_Q1_1_2");
+		if (GetVar("AIM.SECTOR.CONTROLLED")<2)
+		{
+			Text("TS_L11_Q1_1_3");
+			SetMsgJ("TS_L11_J_Q1_1");
+			SetQuestPart("TS_L11_J_Q1_1", "TS_L11_J_Q1_2");  
+			SetCaptureInterface(0);
+		}
+		else
+		{
+			Text("TS_L11_Q1_2_1");
+			SetMsgJ("TS_L11_J_Q1_1");	  
+		}
+		MarkMsgJ("TS_L5_J_Q5_2", 2);
+		SetQuestPart("TS_L5_J_Q5_2", "TS_L5_J_Q5_21");
+		MarkMsgJ("TS_L11_J_Q1_1", 1);
+		SetVar("AIM.NET.NAU.1");
+	}
+ }
+
+// Создание коммуникатора для общения с Синигр.
+void proc SinigrComm()
+{
+ //   CloseText("TS_L11_Q1_6");
+	SetVar("AIM.NET.SIN.1");
+	AddItem("TS_ITEM4_2");
+	SetMsgJ("TS_L11_J_Q1_6");
+	MarkMsgJ("TS_L11_J_Q1_6", 1);
+//	SetCaptureInterface(0);
+	AddLocationKey("location7", 1);
+}
+
+// Обработка сети на 11-й локации
+bool proc InLoc11(char item)
+{
+	if (item=="B_L11_ARLINGLAB")
+	{
+		// если получено задание захватить 3 сектора, но сектора еще не захвачены - пишем напоминалку
+		if (GetVar("AIM.NET.NAU.1") && !GetVar("AIM.NET.NAU.2"))
+		{
+			if (GetVar("AIM.SECTOR.CONTROLLED")>=2)
+			{
+				Text("TS_L11_TEXT2_1");
+				SetCaptureInterface(1);
+			}
+			else
+				Text("TS_L11_TEXT2_0");
+		}
+		// Выдача задания про наутилуса
+		if(!GetVar("AIM.NET.NAU.1"))
+		{
+			 SetCaptureInterface(1);
+			 Text("TS_L11_Q1_1");
+		}
+		
+		// Если игрок получил информацию от своего кластера
+		if (GetItem("TS_ITEM4_1"))
+		{
+			SetVar("AIM.NET.NAU.5");
+			Text("TS_L11_Q1_4");
+			RemoveItem("TS_ITEM4_1");
+			SetTimer("Decoding", 1);
+			SetVar("AIM.DECODING.TIME", 10);
+			SetQuestPart("TS_L11_J_Q1_1", "TS_L11_J_Q1_4");
+			return false;
+		}
+
+		// Если время расшифровки закончилось - то 
+		if (GetVar("AIM.NET.NAU.6") && !GetVar("AIM.NET.NAU.7"))
+		{
+			SetVar("AIM.NET.NAU.7");
+			MarkMsgJ("TS_L11_J_Q1_1", 2);
+			Text("TS_L11_Q1_5");
+			SinigrComm();
+  //		  SetCaptureInterface(1);
+			return false;
+		}
+
+		// После общения с Синигр - даем игроку указания по коммуникатору..
+		if (GetVar("AIM.NET.SIN.2") && !GetVar("AIM.NET.SIN.3"))
+		{
+			SetCaptureInterface(1);
+			Text("TS_L11_Q2_1");
+			//TODO: Spline - временно для тестирования
+			if (GetItem("TS_ITEM3")!=1)
+				AddItem("TS_ITEM3");
+		}
+		
+		// Подгоняем игрока - пущай едет к наутилусу общастя во второй раз
+		if (GetVar("AIM.NET.SIN.3") && !GetVar("AIM.NET.SIN.4"))
+			Text("TS_L11_Q2_21");
+
+		// Подгоняем игрока, когда он пообщался с наутилусом во второй раз, но опять тупит и не едет на базу.
+		if (GetVar("AIM.NET.SIN.4") && !GetVar("AIM.NET.SIN.5"))
+			Text("TS_L11_Q2_22");
+
+		// Когда сообщение расшифровано, но наутилус еще нифига не сделал
+		if (GetVar("AIM.NET.SIN.5") && !GetVar("AIM.NAU.DESTROY"))
+		{
+			Text("TS_L11_TEXT4_1");
+			if (!GetVar("AIM.NET.SIN.5a"))
+			{
+				RemoveItem("TS_ITEM5_1");
+				SetQuestPart("TS_L11_J_Q1_6", "TS_L11_J_TEXT4_2");
+				SetVar("AIM.NET.SIN.5a");
+			}
+		}
+
+		// когда наутилус сделал свое дело, но к синиграм мы еще не заезжали
+		if (GetVar("AIM.NAU.DESTROY") && !GetVar("AIM.NET.SIN.6") && !GetVar("AIM.NET.SIN.7"))
+		{
+			Text("TS_L11_TEXT4_2");
+			SetQuestPart("TS_L11_J_Q1_6", "TS_L11_J_Q2_2");
+			SetVar("AIM.NET.SIN.6");
+		}
+
+		// Когда синигр дали какую-то фигню игроку и считающие говорят, что тебе фигню дали.
+		if (GetItem("TS_ITEM6_1")==1 && !GetVar("AIM.NET.SIN.8"))
+		{
+			Text("TS_L11_TEXT4_3");
+			GetVar("AIM.NET.SIN.8");
+		}
+	}
+	
+	return true;
+}
+
+// Прописываем в коммуникатор информацию для передачи наутилусу.
+void proc Sin3()
+{
+	SetVar("AIM.NET.SIN.3");
+	SetQuestPart("TS_L11_J_Q1_6", "TS_L11_J_Q2_2");
+	SetCaptureInterface(0);
+}
+
+// Создание коммуникатора для общения с Синигр.
+void proc SinigrComm()
+{
+	CloseText("TS_L11_Q1_6");
+	SetVar("AIM.NET.SIN.1");
+	AddItem("TS_ITEM4_2");
+	SetMsgJ("TS_L11_J_Q1_6");
+	MarkMsgJ("TS_L11_J_Q1_6", 1);
+//	SetCaptureInterface(0);
+	AddLocationKey("location7", 1);
+}
+
+void proc Decoding()
+{
+	int iTime;
+	iTime = GetVar("AIM.DECODING.TIME")-1;
+	if (iTime<0) iTime = 0;
+	SetVar("AIM.DECODING.TIME", iTime);
+	if (!GetVar("AIM.DECODING.TIME"))
+	{
+		SetVar("AIM.NET.NAU.6");
+	}
+	else
+		SetTimer("Decoding", 1);
+}
+
+void proc Nau2()
+{
+	if (GetItem("TS_ITEM3")!=1)
+	{
+		CloseText("TS_L11_TEXT2_1");
+		CloseText("TS_L11_Q1_2_1");
+		Text("TS_L11_Q1_3");
+		AddItem("TS_ITEM3");
+		SetQuestPart("TS_L11_J_Q1_1", "TS_L11_J_Q1_3");
+		SetCaptureInterface(0);
+		SetVar("AIM.NET.NAU.2");
+		//TODO: для тестирования
+		SetPelengPoint("TS_GRP_NAUTILUS");
+	}
+}
+
+bool proc InLoc5()
+{
+	if (!GetVar("AIM.NET.ARIO.1"))
+	{
+		ClearWindow();
+		SetCaptureInterface(1);
+		Text("TS_L5_Q1_7");
+		SetVar("AIM.NET.ARIO.1");
+	}
+	else
+
+	// Пока игрок не встретил арио и не послушал его речь - выдаем ему это
+	if (!GetVar("AIM.ARIO.TS.1"))
+	{
+		Text("TS_L5_Q1_7_2");
+		//Text("TS_L5_Q1_7_3");
+	}
+	else
+	// Если игрок встетил Арио, но пока не основал клан
+	// то один раз даем ему сообщение
+	if (GetVar("AIM.ARIO.TS.1") && !GetVar("AIM.CLAN.CREATE") && !GetVar("AIM.NET.ARIO.2"))
+	{
+		Text("TS_L5_Q4_1");
+		//SetQuestPart("TS_L5_J_Q3_3", "TS_L5_J_Q4_1");
+		SetQuestPart("TS_L5_J_Q3_1", "TS_L5_J_Q4_1");
+		SetVar("AIM.NET.ARIO.2");
+	}
+	else
+	// Если мы его уже подталкнули один раз - напоминаем - надо создать клан
+	if (!GetVar("AIM.CLAN.CREATE") && GetVar("AIM.NET.ARIO.2"))
+	{
+		Text("TS_L5_Q4_2");
+	}
+	 
+	// Теперь клан создан - поздравим игрока и зададим ему целью - захватить весь сектор
+	if (GetVar("AIM.CLAN.CREATE") && !GetVar("AIM.NET.SECTOR.1"))
+	{
+		Text("TS_L5_Q5_1");
+		SetMsgJ("TS_L5_J_Q5_1");
+		MarkMsgJ("TS_L5_J_Q5_1", 1);
+		
+		SetMsgJ("TS_L5_TEXT7_1"); //- может попозже  
+		SetVar("AIM.NET.SECTOR.1");
+	}
+	else
+	// Иначе напоминаем ему - захвати клан
+	if (GetVar("AIM.NET.SECTOR.1") && !GetVar("AIM.SECTOR.FIRST"))
+	{
+		Text("TS_L5_Q5_3");
+		SetVar("AIM.NET.SECTOR.1");
+	}
+	
+	// Если игрок захватил сектор - то поздравляем его
+	if (GetVar("AIM.SECTOR.FIRST") && !GetVar("AIM.NET.SECTOR.2"))
+	{
+		SetVar("AIM.NET.SECTOR.2");
+		Text("TS_L5_Q5_2");
+		SetMsgJ("TS_L5_J_Q5_2");
+		SetQuestPart("TS_L5_J_Q5_1", "TS_L5_J_Q5_4");
+		MarkMsgJ("TS_L5_J_Q5_1", 2);
+		MarkMsgJ("TS_L5_J_Q5_2", 1);
+		AddLocationKey("location11", 1);
+		return false;
+	}
+	return true;
+} // inLoc5
+
+void proc NoArling()
+{
+	// Когда считающие задали игроку захватить 2 локации,
+	// они предупреждают его о необходимости их захватить или посылают игрока в болото
+	 if (GetVar("AIM.NET.NAU.1") && !GetVar("AIM.NET.NAU.2"))
+	 {
+		 if (GetVar("AIM.SECTOR.CONTROLLED")>=2)
+			 Text("TS_LALL_TEXT1_1");
+		 else
+			 Text("TS_LALL_TEXT1_0");
+	 }
+}
+
+void proc AllNets()
+{
+	if (GetArea()!="location11" && !GetVar("AIM.NET.NAU.1") && GetVar("AIM.NET.SECTOR.2"))
+		Text("TS_LALL_TEXT0_1");
+		
+	// Если выдано задание, но наутилус еще не найден.
+	if (GetVar("AIM.NET.NAU.2") && !GetVar("AIM.NET.NAU.3"))
+		Text("TS_LALL_TEXT1_11");
+		
+	// Если мы пообщались с наутилосом, но приезали в сеть другую.
+	if (GetVar("AIM.NET.NAU.3") && !GetVar("AIM.NET.NAU.4"))
+		Text("TS_LALL_TEXT1_12");
+		
+	// Если мы пообщались с нашими, но еще не приехали в ЯБ
+	if (GetVar("AIM.NET.NAU.4") && !GetVar("AIM.NET.NAU.5"))
+		Text("TS_LALL_TEXT1_21");
+		
+	// Пока считающие расшифровывают информацию - горовим им ждать, понимаешь..
+	if (GetVar("AIM.NET.NAU.5") && !GetVar("AIM.NET.NAU.6"))
+		Text("TS_LALL_TEXT1_22");
+		
+	// Когда считающие информацию расшифровали - шлем игрока в Ядовитые болота
+	if (GetVar("AIM.NET.NAU.6") && !GetVar("AIM.NET.NAU.7"))
+		Text("TS_LALL_TEXT1_23");
+		
+	// Когда считающие дали игроку коммуникатор и отправили в сектор болот, а он еще тута.
+	if (GetVar("AIM.NET.SIN.1") && !GetVar("AIM.NET.SIN.2"))
+		Text("TS_LALL_TEXT1_24");
+
+	if (GetVar("AIM.BUNKER.1") && !GetVar("AIM.BUNKER.NET"))
+	{
+		Text("TS_L5_Q2_2");
+		SetVar("AIM.BUNKER.NET");
+	}
+}
+
+void proc OnEnterNet(char item)
+{
+	if (!GetVar("DEMO"))
+		StartScriptEvent("Clans\Events\EnterNet.src", "OnEnterNet", item);
+
+	bool bNext = true;
+	
+	if (GetArea()=="location5") bNext = InLoc5();
+	if (GetArea()=="location11") bNext = InLoc11(item);
+	else
+		NoArling();
+		
+	if (bNext)
+		AllNets();
+}
+
+void proc D_L5_Q1_7()
+{
+   SetCaptureInterface(0);
+ 
+   AddLocationKey("location5", 1);
+   SetMsgJ("TS_L5_J_Q1_7");
+   SetMsgJ("TS_L5_J_Q1_7_1");
+   SetMsgJ("TS_L5_J_Q1_7_2");
+   MarkMsgJ("TS_L5_J_Q1_7_2", 1);
+}

@@ -1,0 +1,22 @@
+#include "include\AIM.src"
+
+void proc OnClanDeath(char clanID)
+{
+	char loc;
+	loc = GetArea;
+	
+	SetVar(clanID+".life", 1);
+	
+	//--------квест T_L1_FIREHALF_04-------//
+	if (GetVarChar("fire_activiq") == "T_L1_FIREHALF_04" && clanID == "ORG_FIREHALF")
+	{
+		Text("Q_COMPLETE");
+		SetVar("T_L1_FIREHALF_04_compl", 1);
+	}
+	//--------квест T_L9_SURVIVORS_03-------//
+	if (GetVarChar("fire_activiq") == "T_L9_SURVIVORS_03" && clanID == "ORG_HIDDEN" && loc == "location12")
+	{
+		Text("Q_COMPLETE");
+		SetVar("T_L9_SURVIVORS_03_compl", 1);
+	}
+}

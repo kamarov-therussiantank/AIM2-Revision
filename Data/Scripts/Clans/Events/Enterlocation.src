@@ -1,0 +1,317 @@
+#include "include\AIM.src"
+
+
+void proc OnEnterLocation(char locID)
+{
+//	char loc;
+//	loc = GetArea();
+	
+		switch(locID)
+		{
+			case "location1":
+			{
+				SetVar("GEN_DELIVER", 1);
+				SetVar("GEN_DELIVER_1", 1);
+				SetVar("GEN_DELIVER_2", 1);
+				SetVar("GEN_FIND", 1);
+				SetVar("GEN_KILL", 1);
+				SetVar("GEN_KILL_1", 1);
+				SetVar("GEN_KILL_2", 1);
+				SetVar("GEN_KILL_3", 1);
+				SetVar("GEN_MAIL", 1);
+				SetVar("GEN_MAIL_1", 1);
+				SetVar("GEN_MAIL_2", 1);
+				SetVar("GEN_TRANS", 1);
+				SetVar("GEN_TRANS_1", 1);
+			}
+			case "location2":
+			{
+				SetVar("GEN_DELIVER", 1);
+			   SetVar("GEN_DELIVER_1", 1);
+			   SetVar("GEN_DELIVER_2", 1);
+			   SetVar("GEN_FIND", 1);
+				SetVar("GEN_KILL", 1);
+				SetVar("GEN_KILL_1", 1);
+				SetVar("GEN_KILL_2", 1);
+				SetVar("GEN_KILL_3", 1);
+				SetVar("GEN_MAIL", 1);
+				SetVar("GEN_MAIL_1", 1);
+				SetVar("GEN_MAIL_2", 1);
+				SetVar("GEN_TRANS", 1);
+				SetVar("GEN_TRANS_1", 1);
+			//-----«апуск квеста T_L3_ARHEYS_02 при вьезде в локацию-------//
+				if (GetVarChar("arhe_activeq") == "T_L3_ARHEYS_02")
+				{
+					CreateGroup("T2_L3_ARHEYS_CARAVAN"); 
+					SetPelengPoint("T2_L3_ARHEYS_CARAVAN");
+				}
+			}
+			case "location3":
+			{
+				SetVar("GEN_DELIVER", 1);
+			   SetVar("GEN_DELIVER_1", 1);
+			   SetVar("GEN_DELIVER_2", 1);
+			   SetVar("GEN_FIND", 1);
+				SetVar("GEN_KILL", 1);
+				SetVar("GEN_KILL_1", 1);
+				SetVar("GEN_KILL_2", 1);
+				SetVar("GEN_KILL_3", 1);
+				SetVar("GEN_MAIL", 1);
+				SetVar("GEN_MAIL_1", 1);
+				SetVar("GEN_MAIL_2", 1);
+				SetVar("GEN_TRANS", 1);
+				SetVar("GEN_TRANS_1", 1);
+				
+			//-----«апуск квеста T_L10_FORWARD_01 при вьезде в локацию-------//
+				if (GetVarChar("forw_activeq") == "T_L10_FORWARD_01" && GetVar("T_L10_FORWARD_01_compl1") < 1);
+				{
+					CreateObjectAt("TOV_TITAN", "TT_CONTAINER", "T1_L10_POINT_MEGAGRIB");
+					SetSensor("T1_L10_POINT_MEGAGRIB");
+					SetVar("T_L10_FORWARD_01_compl1", 1);
+				}
+			}
+			case "location5":
+			{
+				SetVar("GEN_DELIVER", 1);
+			   SetVar("GEN_DELIVER_1", 1);
+			   SetVar("GEN_DELIVER_2", 1);
+			   SetVar("GEN_FIND", 1);
+				SetVar("GEN_KILL", 1);
+				SetVar("GEN_KILL_1", 1);
+				SetVar("GEN_KILL_2", 1);
+				SetVar("GEN_KILL_3", 1);
+				SetVar("GEN_MAIL", 1);
+				SetVar("GEN_MAIL_1", 1);
+				SetVar("GEN_MAIL_2", 1);
+				SetVar("GEN_TRANS", 1);
+				SetVar("GEN_TRANS_1", 1);
+
+	//-----«апуск квеста T_L6_FINDERS_01 при вьезде в локацию-------//
+				if (GetVar("AIM.FIND.ISQ") && GetVarChar("AIM.FIND.ACTQ")=="T_L6_FINDERS_01")
+				{
+					CreateGroup("GRP_L6_FIN01_MERC1"); 
+					CreateGroup("GRP_L6_FIN01_MERC2");
+					CreateGroup("GRP_L6_FIN01_FIN");
+					SetRelation ("GRP_L6_FIN01_MERC1", "GRP_L6_FIN01_FIN", -10); 
+					SetRelation ("GRP_L6_FIN01_MERC2", "GRP_L6_FIN01_FIN", -10); 
+					SetRelation ("GRP_L6_FIN01_FIN", "GRP_L6_FIN01_MERC1", -10); 
+					SetRelation ("GRP_L6_FIN01_FIN", "GRP_L6_FIN01_MERC2", -10);
+					SetPelengPoint("GRP_L6_FIN01_MERC1");
+					SetPelengPoint("GRP_L6_FIN01_MERC2");
+					SetPelengPoint("GRP_L6_FIN01_FIN");
+					//GliderGo("T_L5_FANT_04_FINDERS1", "T_L5_FANT_04_TARGET"); 
+					//SetTimer("T_L5_FANT_04_time", 1.5);
+				}
+				//-----«апуск квеста T_L6_FINDERS_02 при вьезде в локацию-------//
+				if (GetVar("AIM.FIND.ISQ") && GetVarChar("AIM.FIND.ACTQ")== "T_L6_FINDERS_02")
+				{
+					CreateGroup("GRP_T_L6_FINDERS_02_F"); 
+					SetPelengPoint("POINT_T_L6_FINDERS_02");
+				}
+			}
+			case "location6":
+			{
+				SetVar("GEN_DELIVER", 1);
+			   SetVar("GEN_DELIVER_1", 1);
+			   SetVar("GEN_DELIVER_2", 1);
+			   SetVar("GEN_FIND", 1);
+				SetVar("GEN_KILL", 1);
+				SetVar("GEN_KILL_1", 1);
+				SetVar("GEN_KILL_2", 1);
+				SetVar("GEN_KILL_3", 1);
+				SetVar("GEN_MAIL", 1);
+				SetVar("GEN_MAIL_1", 1);
+				SetVar("GEN_MAIL_2", 1);
+				SetVar("GEN_TRANS", 1);
+				SetVar("GEN_TRANS_1", 1);
+		//-----«апуск квеста T_L5_FANT_04 при вьезде в локацию-------//
+				if (GetVar("AIM.FANT.ISQ") && GetVarChar("AIM.FANT.ACTQ") == "T_L5_FANT_04")
+				{
+					CreateGroup("T_L5_FANT_04_FINDERS1"); 
+					GliderGo("T_L5_FANT_04_FINDERS1", "T_L5_FANT_04_TARGET"); 
+					SetTimer("T_L5_FANT_04_time", 1.5);
+//					SetVar("T_L5_FANT_04_fail", 1);
+//					Text("Q_FAILED");
+				}
+				
+			}
+			case "location9":
+			{
+				SetVar("GEN_DELIVER", 1);
+			   SetVar("GEN_DELIVER_1", 1);
+			   SetVar("GEN_DELIVER_2", 1);
+			   SetVar("GEN_FIND", 1);
+				SetVar("GEN_KILL", 1);
+				SetVar("GEN_KILL_1", 1);
+				SetVar("GEN_KILL_2", 1);
+				SetVar("GEN_KILL_3", 1);
+				SetVar("GEN_MAIL", 1);
+				SetVar("GEN_MAIL_1", 1);
+				SetVar("GEN_MAIL_2", 1);
+				SetVar("GEN_TRANS", 1);
+				SetVar("GEN_TRANS_1", 1);
+				//-----«апуск квеста T_L2_NARGOONS_02 при вьезде в локацию-------//
+				char narg_activq;
+				narg_activq = GetVarChar("narg_activeq");
+				if (narg_activq == "T_L2_NARGOONS_02")
+				{
+					CreateGroup("T2_L2_NARGOONS1"); 
+					CreateGroup("T2_L2_NARGOONS2");
+					CreateGroup("T2_L2_NARGOONS3");
+					CreateGroup("T2_L2_NARGOONS4");
+					CreateGroup("T2_L2_NARGOONS5");
+					AssignGliderToPlayer("T2_L2_NARGOONS1", 1); 
+					AssignGliderToPlayer("T2_L2_NARGOONS2", 1); 
+					AssignGliderToPlayer("T2_L2_NARGOONS3", 1); 
+					AssignGliderToPlayer("T2_L2_NARGOONS4", 1); 
+					AssignGliderToPlayer("T2_L2_NARGOONS5", 1); 
+					SetSensorNPC("B_L9_BASE1", "T2_L2_NARGOONS1"); 
+					SetSensorNPC("B_L9_BASE2", "T2_L2_NARGOONS2"); 
+					SetSensorNPC("B_L9_BASE3", "T2_L2_NARGOONS3"); 
+					SetSensorNPC("B_L9_BASE4", "T2_L2_NARGOONS4"); 
+					SetSensorNPC("B_L9_BASE5", "T2_L2_NARGOONS5"); 
+				}
+			}
+			case "location10":
+			{
+				SetVar("GEN_DELIVER", 1);
+			   SetVar("GEN_DELIVER_1", 1);
+			   SetVar("GEN_DELIVER_2", 1);
+			   SetVar("GEN_FIND", 1);
+				SetVar("GEN_KILL", 1);
+				SetVar("GEN_KILL_1", 1);
+				SetVar("GEN_KILL_2", 1);
+				SetVar("GEN_KILL_3", 1);
+				SetVar("GEN_MAIL", 1);
+				SetVar("GEN_MAIL_1", 1);
+				SetVar("GEN_MAIL_2", 1);
+				SetVar("GEN_TRANS", 1);
+				SetVar("GEN_TRANS_1", 1);
+			}
+			case "location11":
+			{
+				SetVar("GEN_DELIVER", 1);
+			   SetVar("GEN_DELIVER_1", 1);
+			   SetVar("GEN_DELIVER_2", 1);
+			   SetVar("GEN_FIND", 1);
+				SetVar("GEN_KILL", 1);
+				SetVar("GEN_KILL_1", 1);
+				SetVar("GEN_KILL_2", 1);
+				SetVar("GEN_KILL_3", 1);
+				SetVar("GEN_MAIL", 1);
+				SetVar("GEN_MAIL_1", 1);
+				SetVar("GEN_MAIL_2", 1);
+				SetVar("GEN_TRANS", 1);
+				SetVar("GEN_TRANS_1", 1);
+	//-----«апуск квеста T_L3_ARHEYS_03 при вьезде в локацию-------//
+				if (GetVarChar("arhe_activeq") == "T_L3_ARHEYS_03")
+				{
+					CreateGroup("T3_L3_ARCHEYS_RESCUED"); 
+					SetPelengPoint("T3_L3_ARCHEYS_RESCUED");
+				}
+	//-----«апуск квеста T_L10_FORWARD_02 при вьезде в локацию-------//
+				if (GetVarChar("forw_activeq") == "T_L10_FORWARD_02" && GetVar("T_L10_FORWARD_02_compl1") == 1)
+				{
+					CreateGroup("GRP_T3_L10_COURIER");
+					Text("MSG_T_L10_FORWARD_02_CUR3");
+					SetSensorNPC("GRP_T3_L10_COURIER", "B_L11_ARLINGLAB");
+					GliderGo("GRP_T3_L10_COURIER", "B_L11_ARLINGLAB");
+					SetVar("T_L10_FORWARD_02_compl1", 2);
+				}
+	//-----«апуск квеста T_L6_FINDERS_03 при вьезде в локацию-------//
+				char activq;
+				activq = GetVarChar("finders_activeq");
+				if (activq == "T_L6_FINDERS_03")
+				{
+					CreateGroup("GRP_LOARFINT"); 
+					CreateGroup("GRP_ARHADDO");
+					CreateGroup("GRP_MINTIARR");
+					GliderGo("T_L5_FANT_04_FINDERS1", "T_L5_FANT_04_TARGET"); 
+					SetTimer("T_L5_FANT_04_time", 1.5);
+				}
+			}
+			case "demo_map":
+			{
+				SetVar("GEN_DELIVER", 0);
+				SetVar("GEN_DELIVER_1", 0);
+				SetVar("GEN_DELIVER_2", 0);
+				SetVar("GEN_FIND", 1);
+				SetVar("GEN_KILL", 0);
+				SetVar("GEN_KILL_1", 1);
+				SetVar("GEN_KILL_2", 0);
+				SetVar("GEN_KILL_3", 0);
+				SetVar("GEN_MAIL", 1);
+				SetVar("GEN_MAIL_1", 0);
+				SetVar("GEN_MAIL_2", 0);
+				SetVar("GEN_TRANS", 0);
+				SetVar("GEN_TRANS_1", 0);
+			}
+			case "ARENA":
+			{
+				//---—обытие срабатывает когда игрок по€вл€етьс€ на арене во врем€ прохождени€ T_L3_ASCENDS_05---//
+				if (GetVarChar("asce_activeq") == "T_L3_ASCENDS_05" && GetVar("asce_activeq") == 1)
+				{
+					CreateMech(GetUniqueMechID, "POINT_ARENA0", "CFG_FORWARD_AT_HI");
+				}
+			}
+		} // end swith
+} //end proc
+
+
+void proc T_L5_FANT_04_time()
+{
+	if (GetArea == "location6")
+	{
+		CreateGroup("T_L5_FANT_04_FINDERS2"); 
+		GliderGo("T_L5_FANT_04_FINDERS2", "T_L5_FANT_04_TARGET"); 
+		SetTimer("T_L5_FANT_04_time1", 1.5);
+	}
+	else
+	{
+		SetTimer("T_L5_FANT_04_time", 1.5);
+	}
+}
+
+void proc T_L5_FANT_04_time1()
+{
+	if (GetArea == "location6")
+	{
+		CreateGroup("T_L5_FANT_04_FINDERS3"); 
+		GliderGo("T_L5_FANT_04_FINDERS3", "T_L5_FANT_04_TARGET"); 
+		SetTimer("T_L5_FANT_04_time2", 1.5);
+	}
+	else
+	{
+		SetTimer("T_L5_FANT_04_time1", 1.5);
+	}
+}
+
+void proc T_L5_FANT_04_time2()
+{		
+	if (GetArea == "location6")
+	{
+		CreateGroup("T_L5_FANT_04_FINDERS4"); 
+		GliderGo("T_L5_FANT_04_FINDERS4", "T_L5_FANT_04_TARGET"); 
+		SetTimer("T_L5_FANT_04_time3", 1.5);
+	}
+	else
+	{
+		SetTimer("T_L5_FANT_04_time2", 1.5);
+	}
+}
+
+void proc T_L5_FANT_04_time3()
+{
+	if (GetArea == "location6")
+	{
+		if (GetVar("AIM.FANT.ISQ") && GetVarChar("AIM.FANT.ACTQ")== "T_L5_FANT_04" && GetVar("T_L5_FANT_04_compl") != 1)
+		{
+			Text("Q_FAILED");
+			SetVar("T_L5_FANT_04_fail", 1);
+		}
+	}
+	else
+	{
+		SetTimer("T_L5_FANT_04_time3", 1.5);
+	}
+}

@@ -1,0 +1,46 @@
+#include "include\AIM.src"
+
+void proc OnEnterLocation(char item)
+{
+	StartScriptEvent("Events\EnterLocation.src", "OnEnterLocation", item);
+
+	if (!GetVar("location1.FIRST"))
+	{
+		CreateGroup("TS_GRP_APROGUS");
+		SetMechGeneration("TS_GRP_APROGUS", 5);
+		
+		CreateGroup("TS_GRP_ARHHAND");
+		SetMechGeneration("TS_GRP_ARHHAND", 5);
+		
+		StartScriptEvent("Events\Invaders.src", "OnEnterLocation", item);
+
+		SetVar("location1.FIRST");
+	}
+	
+	SetTimer("OnWorldTimeProcess", 0.5);
+}
+
+void proc OnWorldTimeProcess(char item)
+{
+	
+	// The clan relations
+	SetClanRelation("ORG_HIDDEN", "ORG_PLAYER", -10);
+	SetClanRelation("ORG_HIDDEN", "ORG_INVADERS", -10);
+	SetClanRelation("ORG_HIDDEN", "ORG_HUNTERS", -10);
+	SetClanRelation("ORG_HIDDEN", "ORG_CALMKEEPERS", -10);
+	SetClanRelation("ORG_HUNTERS", "ORG_FREE", -10);
+	SetClanRelation("ORG_HUNTERS", "ORG_PLAYER", -10);
+	SetClanRelation("ORG_HUNTERS", "ORG_CALMKEEPERS", -10);
+	SetClanRelation("ORG_INVADERS", "ORG_FREE", -10);
+	SetClanRelation("ORG_INVADERS", "ORG_PLAYER", -10);
+	SetClanRelation("ORG_INVADERS", "ORG_HUNTERS", -10);
+	SetClanRelation("ORG_INVADERS", "ORG_CALMKEEPERS", -10);
+
+	
+	SetTimer("OnWorldTimeProcess2", 0.5);
+}
+
+void proc OnWorldTimeProcess2(char item)
+{
+	SetTimer("OnWorldTimeProcess", 0.5);
+}

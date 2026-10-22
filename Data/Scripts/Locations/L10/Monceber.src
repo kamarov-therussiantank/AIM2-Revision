@@ -1,0 +1,51 @@
+#include "include\AIM.cpp"
+
+void proc OnTryConvict(char cMech)
+{
+	if ( GetMechClan(CHAR)!="ORG_PLAYER")
+		return;
+	
+	if (!GetVar("MONCEBER.1"))
+	{
+		Dialog("TS_L10_Q1_1");
+		SetMsgJ("TS_L10_J_Q1_1");
+		MarkMsgJ("TS_L10_J_Q1_1", 1);
+	}
+
+	// Monceber Quest
+	if (GetClanRating("ORG_ARHEYS")<=10)
+	{
+		Dialog("TS_L10_Q1_2");
+		SetQuestPart("TS_L10_J_Q1_1", "TS_L10_J_Q1_3");
+		MarkMsgJ("TS_L10_J_Q1_1", 2);
+		SetVar("G5_CONVICTED", GetVar("G5_CONVICTED")+1);
+		SetMechClan("TS_GRP_MONCEBER", "ORG_PLAYER");
+		SetClanLider("ORG_FORWARD", "");
+		SetClanRelation("ORG_FORWARD", "ORG_PLAYER", 100);
+		
+		// Make GAANTRO convincable after the Monceber quest completeion
+		SetVar("AIM.MONCEBER.CONVICTED");   
+	}
+	else
+	{
+		if (GetVar("MONCEBER.1"))
+			MechSay(cMech, "TS_L10_Q1_3");
+	}
+
+	if (!GetVar("MONCEBER.1"))
+	   SetVar("MONCEBER.1");
+	
+}
+
+void proc OnTalk(char cMech)
+{
+   if (GetMechClan(cMech)!="ORG_PLAYER")
+	   MechSay(cMech, "MSG_M5_TALK");
+   else
+	   MechSay(cMech, "MSG_5GEN_AFTER_PER");
+}
+
+void proc OnView(char cMech)
+{
+   SetRelation(cMech, "PLAYER", 0, 0);
+}

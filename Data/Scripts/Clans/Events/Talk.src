@@ -1,0 +1,199 @@
+#include "include\AIM.src"
+
+void proc OnTalk(char gliderID)
+{
+
+//--------квест T_L6_FINDERS_03-------//
+	char activq_finders;
+	activq_finders = GetVarChar("finders_activeq");
+	
+	if (activq_finders == "T_L6_FINDERS_03" && gliderID == "GRP_LOARFINT" && GetVar("first_talk_find03") == 0)
+	{
+		Text("Q_MESSAGE_SEND");
+		Text("MSG_T_L6_FINDERS_03_0");
+		GliderGo("GRP_LOARFINT", "MUCHROOM_01"); 
+		GliderGo("GRP_ARHADDO", "MUCHROOM_01");
+		GliderGo("GRP_MINTIARR", "MUCHROOM_01");
+		SetTimer("T_L6_FINDERS_03_time", 1.5);
+		SetVar("first_talk_find03", 1);
+	}
+	
+//--------квест T_L6_CALMKEEPERS_05-------//	
+	char activq_calm;
+	activq_calm = GetVarChar("calm_activeq");
+	
+	if (activq_calm == "T_L6_CALMKEEPERS_05" && gliderID == "GRP_T_L6_KEEP_05_PAT" && GetVar("first_talk_calm05") == 0)
+	{
+		Text("MSG_T_L6_CALMKEEPERS_05_1");
+		CreateGroup("GRP_T_L6_KEEP_05_FOR1"); 
+		GliderGo("GRP_T_L6_KEEP_05_FOR1", "POINT_T_L6_CALMKEEP_05_1"); 
+		SetVar("first_talk_calm05", 1);
+	}
+	
+//--------квест T_L3_ARHEYS_02-------//
+	char activq_arheys;
+	activq_arheys = GetVarChar("arhe_activeq");
+	if (activq_finders == "T_L3_ARHEYS_02" && gliderID == "T2_L3_ARHEYS_CARAVAN" && GetVar("first_talk_arhe02") == 0)
+	{
+		AssignGliderToPlayer("T2_L3_ARHEYS_CARAVAN", 1); 
+		Text("Q_MESSAGE_SEND");
+		SetSensorNPC("B_L2_TUNNEL", "T2_L3_ARHEYS_CARAVAN");
+		SetVar("first_talk_arhe02", 1);
+	}
+//--------квест T_L3_ARHEYS_03-------//
+	if (GetVarChar("asce_activiq") == "T_L3_ARHEYS_03" && gliderID == "T3_L3_ARCHEYS_RESCUED" && GetVar("first_talk_arhe03") == 0)
+	{
+		AssignGliderToPlayer("T3_L3_ARCHEYS_RESCUED", 1); 
+		Text("Q_MESSAGE_SEND");
+		SetSensorNPC("B_L11_TUNNEL", "T3_L3_ARCHEYS_RESCUED");
+		SetVar("first_talk_arhe03", 1);
+	}
+//--------квест T_L1_FIREHALF_01-------//
+	if (GetVarChar("fire_activiq") == "T_L1_FIREHALF_01" && gliderID == "ORG_MIRAND" && GetVar("first_talk_fire01") == 0)
+	{
+		Text("Q_T1_L1_MIRANDTALK");
+		SetVar("first_talk_fire01", 1);
+		SetVar("T_L1_FIREHALF_01_compl", 1);
+	}
+//--------квест T_L1_FIREHALF_04-------//
+	if (GetVarChar("fire_activiq") == "T_L1_FIREHALF_04" && gliderID == "ORG_MIRAND" && GetVar("first_talk_fire04") == 0)
+	{
+		Text("Q_T5_L1_MIRAND1");
+		SetVar("first_talk_fire04", 1);
+		SetVar("T_L1_FIREHALF_04_compl", 1);
+		GliderGo("ORG_MIRAND", "T5_L1_TARGET");							//проблема нужно чтобы миранд не подобрал контейнеры
+		CreateObjectAt("TOV_MULTI_ANCHOR7", "TT_CONTAINER", "T5_L1_TARGET");
+		//CreateObjectAt("need_con", "TT_CONTAINER", pointname); //Проблема незнаю какой индификатор у денег
+	}
+//--------квест T_L10_FORWARD_02-------//
+	if (GetVarChar("forw_activiq") == "T_L10_FORWARD_02" && gliderID == "GRP_T3_L10_COURIER" && GetVar("first_talk_forw02") == 0)
+	{
+		Text("MSG_T_L10_FORWARD_02_CUR1");
+		SetVar("first_talk_forw02", 1);
+		GliderGo("GRP_T3_L10_COURIER", "B_L10_TUNNEL"); //Проблема будет ли глайдер пытаться заехать в здание ?
+		SetSensorNPC("B_L10_TUNNEL", "GRP_T3_L10_COURIER");
+	}
+//--------квест T_L1_ASCENDS_02-------//
+	if (GetVarChar("arhe_activeq") == "T_L1_ASCENDS_02")
+	{
+		switch(gliderID)
+		{
+			case "TS_GRP_MONCEBER":
+			{
+				if (GetVar("T_L1_ASCENDS_02.cl1") == 0)
+				{
+					Text("Q_MESSAGE_SEND");
+					SetVar("T_L1_ASCENDS_02_compl", GetVar("T_L1_ASCENDS_02_compl")+1);
+					SetVar("T_L1_ASCENDS_02.cl1", 1);
+					SetQuest("T_L1_ASCENDS_02", "T_L1_ASCENDS_02.JOURNAL.1");
+				}
+			}
+			case "TS_GRP_FATALL":
+			{
+				if (GetVar("T_L1_ASCENDS_02.cl2") == 0)
+				{
+					Text("Q_MESSAGE_SEND");
+					SetVar("T_L1_ASCENDS_02_compl", GetVar("T_L1_ASCENDS_02_compl")+1);
+					SetVar("T_L1_ASCENDS_02.cl2", 1);
+					SetQuest("T_L1_ASCENDS_02", "T_L1_ASCENDS_02.JOURNAL.3");
+				}
+			}
+			case "TS_GRP_MORRANDO":
+			{
+				if (GetVar("T_L1_ASCENDS_03.cl3") == 0)
+				{
+					Text("Q_MESSAGE_SEND");
+					SetVar("T_L1_ASCENDS_02_compl", GetVar("T_L1_ASCENDS_02_compl")+1);
+					SetVar("T_L1_ASCENDS_02.cl3", 1);
+					SetQuest("T_L1_ASCENDS_02", "T_L1_ASCENDS_02.JOURNAL.5");
+				}
+			}
+			case "TS_GRP_VERCUS":
+			{
+				if (GetVar("T_L1_ASCENDS_02.cl4") == 0)
+				{
+					Text("Q_MESSAGE_SEND");
+					SetVar("T_L1_ASCENDS_02_compl", GetVar("T_L1_ASCENDS_02_compl")+1);
+					SetVar("T_L1_ASCENDS_02.cl4", 1);
+					SetQuest("T_L1_ASCENDS_02", "T_L1_ASCENDS_02.JOURNAL.7");
+				}
+			}
+			case "ORG_NETRART":
+			{
+				if (GetVar("T_L1_ASCENDS_02.cl5") == 0)
+				{
+					Text("Q_MESSAGE_SEND");
+					SetVar("T_L1_ASCENDS_02_compl", GetVar("T_L1_ASCENDS_02_compl")+1);
+					SetVar("T_L1_ASCENDS_02.cl5", 1);
+					SetQuest("T_L1_ASCENDS_02", "T_L1_ASCENDS_02.JOURNAL.9");
+				}
+			}
+		}//end switch
+	}//end if
+	
+} // END PROC	 OnTalk
+
+
+void proc T_L6_FINDERS_03_time()
+{
+	if (activq_finders == "T_L6_FINDERS_03" && IsKilled("GRP_LOARFINT") == 0 && IsKilled("GRP_ARHADDO") == 0 && IsKilled("GRP_MINTIARR") == 0)
+	{
+		GliderGo("GRP_LOARFINT", "MUCHROOM_02"); 
+		GliderGo("GRP_ARHADDO", "MUCHROOM_02");
+		GliderGo("GRP_MINTIARR", "MUCHROOM_02");
+		SetTimer("T_L6_FINDERS_03_time1", 1.5);
+	}
+	else
+	{
+			SetVar("T_L6_FINDERS_03_fail", 1);
+			Text("Q_FAIL");
+	}
+}
+
+
+void proc T_L6_FINDERS_03_time1()
+{
+	if (activq_finders == "T_L6_FINDERS_03" && IsKilled("GRP_LOARFINT") == 0 && IsKilled("GRP_ARHADDO") == 0 && IsKilled("GRP_MINTIARR") == 0)
+	{
+		GliderGo("GRP_LOARFINT", "MUCHROOM_03"); 
+		GliderGo("GRP_ARHADDO", "MUCHROOM_03");
+		GliderGo("GRP_MINTIARR", "MUCHROOM_03");
+		SetTimer("T_L6_FINDERS_03_time2", 1.5);
+	}
+	else
+	{
+			SetVar("T_L6_FINDERS_03_fail", 1);
+			Text("Q_FAIL");
+	}
+}
+
+void proc T_L6_FINDERS_03_time2()
+{
+	if (activq_finders == "T_L6_FINDERS_03" && IsKilled("GRP_LOARFINT") == 0 && IsKilled("GRP_ARHADDO") == 0 && IsKilled("GRP_MINTIARR") == 0)
+	{
+		GliderGo("GRP_LOARFINT", "B_L11_ARLINGLAB"); 
+		GliderGo("GRP_ARHADDO", "B_L11_ARLINGLAB");
+		GliderGo("GRP_MINTIARR", "B_L11_ARLINGLAB");
+		SetTimer("T_L6_FINDERS_03_time3", 1.5);
+		Text("MSG_T_L6_FINDERS_03_1");
+	}
+	else
+	{
+			SetVar("T_L6_FINDERS_03_fail", 1);
+			Text("Q_FAIL");
+	}
+}
+
+void proc T_L6_FINDERS_03_time3()
+{
+	if (activq_finders == "T_L6_FINDERS_03" && IsKilled("GRP_LOARFINT") == 0 && IsKilled("GRP_ARHADDO") == 0 && IsKilled("GRP_MINTIARR") == 0)
+	{
+		Text("MSG_T_L6_FINDERS_03_2");
+		SetVar("T_L6_FINDERS_03_compl", 1);
+	}
+	else
+	{
+		SetVar("T_L6_FINDERS_03_fail", 1);
+		Text("Q_FAIL");
+	}
+}

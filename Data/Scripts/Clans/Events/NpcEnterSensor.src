@@ -1,0 +1,89 @@
+#include "include\AIM.src"
+
+void proc OnEnterSensorNPC(char sensorID, char gliderID) 
+{
+	
+	//------------------------------Выполнение квеста T_L6_FINDERS_02------------------//
+	
+	if (GetVarChar("finders_activeq") == "T_L6_FINDERS_02" && sensorID == "POINT_T_L6_FINDERS_02" && gliderID == "GRP_T_L6_FINDERS_02_F")
+	{
+		SetVar("T_L6_FINDERS_02_compl", 1);
+		Text("Q_COMPLETE");
+	}
+	
+	//------------------------------Выполнение квеста T_L2_TOLERANS_02------------------//
+	
+	if (GetVarChar("toler_activeq") == "T_L2_TOLERANS_02" && sensorID == "B_L2_NEAR_TUNNEL" && gliderID == "T2_L2_TOLERANCE_HIDDEN")
+	{
+		SetVar("T_L6_FINDERS_02_compl", 2);
+		AssignGliderToPlayer("T2_L2_TOLERANCE_TOL", 0);
+		Text("Q_FAIL");
+	}
+	
+	//------------------------------Выполнение квеста T_L2_NARGOONS_02------------------//
+	
+	if (GetVarChar("narg_activeq") == "T_L2_NARGOONS_02")
+	{
+		if (GetVar("T_L2_NARGOONS_02_compl") == 1 && sensorID == "B_L9_BASE1" && gliderID == "T2_L2_NARGOONS1")
+		{
+			SetVar("T_L2_NARGOONS_02_compl", 2);
+			AssignGliderToPlayer("T2_L2_NARGOONS1", 0);
+			GliderGo("T2_L2_NARGOONS1", "B_L9_BASE1"); 
+		}
+		if (GetVar("T_L2_NARGOONS_02_compl") == 2 && sensorID == "B_L9_BASE2" && gliderID == "T2_L2_NARGOONS2")
+		{
+			SetVar("T_L2_NARGOONS_02_compl", 3);
+			AssignGliderToPlayer("T2_L2_NARGOONS2", 0);
+			GliderGo("T2_L2_NARGOONS2", "B_L9_BASE2"); 
+		}
+		if (GetVar("T_L2_NARGOONS_02_compl") == 3 && sensorID == "B_L9_BASE3" && gliderID == "T2_L2_NARGOONS3")
+		{
+			SetVar("T_L2_NARGOONS_02_compl", 4);
+			AssignGliderToPlayer("T2_L2_NARGOONS3", 0);
+			GliderGo("T2_L2_NARGOONS3", "B_L9_BASE3"); 
+		}
+		if (GetVar("T_L2_NARGOONS_02_compl") == 4 && sensorID == "B_L9_BASE4" && gliderID == "T2_L2_NARGOONS4")
+		{
+			SetVar("T_L2_NARGOONS_02_compl", 5);
+			AssignGliderToPlayer("T2_L2_NARGOONS4", 0);
+			GliderGo("T2_L2_NARGOONS4", "B_L9_BASE4"); 
+		}
+		if (GetVar("T_L2_NARGOONS_02_compl") == 5 && sensorID == "B_L9_BASE5" && gliderID == "T2_L2_NARGOONS5")
+		{
+			SetVar("T_L2_NARGOONS_02_compl", 6);
+			AssignGliderToPlayer("T2_L2_NARGOONS5", 0);
+			GliderGo("T2_L2_NARGOONS5", "B_L9_BASE5"); 
+		}
+	}
+//------------------------------Выполнение квеста T_L3_ARHEYS_02------------------//
+	
+	if (GetVarChar("finders_activeq") == "T_L3_ARHEYS_02" && sensorID == "B_L2_TUNNEL" && gliderID == "T2_L3_ARHEYS_CARAVAN" && GetVar("T_L3_ARHEYS_02_compl") == 0)
+	{
+		SetVar("T_L3_ARHEYS_02_compl", 1);
+		AssignGliderToPlayer("T2_L3_ARHEYS_CARAVAN", 0); 
+		GliderGo("T2_L3_ARHEYS_CARAVAN", "B_L2_TUNNEL"); 
+		Text("Q_COMPLETE");
+	}
+
+//------------------------------Выполнение квеста T_L3_ARHEYS_03------------------//
+	if (GetVarChar("finders_activeq") == "T_L3_ARHEYS_03" && sensorID == "B_L11_TUNNEL" && gliderID == "T3_L3_ARCHEYS_RESCUED" && GetVar("T_L3_ARHEYS_03_compl") == 0)
+	{
+		SetVar("T_L3_ARHEYS_03_compl", 1);
+		AssignGliderToPlayer("T3_L3_ARCHEYS_RESCUED", 0); 
+		GliderGo("T3_L3_ARCHEYS_RESCUED", "B_L11_TUNNEL"); 
+		Text("Q_COMPLETE");
+	}
+//------------------------------Выполнение квеста T_L10_FORWARD_02------------------//
+	if (GetVarChar("forw_activeq") == "T_L10_FORWARD_02" && sensorID == "B_L10_TUNNEL" && gliderID == "GRP_T3_L10_COURIER" && GetVar("T_L10_FORWARD_02_compl1") == 0)
+	{
+		SetVar("T_L10_FORWARD_02_compl1", 1);
+		Text("MSG_T_L10_FORWARD_02_CUR2");
+	}
+//------------------------------Выполнение квеста T_L10_FORWARD_02------------------//
+	if (GetVarChar("forw_activeq") == "T_L10_FORWARD_02" && sensorID == "B_L11_ARLINGLAB" && gliderID == "GRP_T3_L10_COURIER" && GetVar("T_L10_FORWARD_02_compl1") == 2)
+	{
+		SetVar("T_L10_FORWARD_02_compl1", 3);
+		Text("MSG_T_L10_FORWARD_02_CUR4");//Проблема квест не доделал потому что не решена проблема с заездом и выездом из здания НПСов
+	}
+
+}

@@ -1,0 +1,46 @@
+#include "include\AIM.cpp"
+
+void proc OnTryConvict(char cMech, char cOrgID)
+{
+	if ( cOrgID!="ORG_PLAYER")
+		return;
+
+	if (!GetVar("ARHHAND.1"))
+	{
+		Dialog("TS_L1_Q2_1");
+		SetMsgJ("TS_L1_J_Q2_1");
+		MarkMsgJ("TS_L1_J_Q2_1", 1);
+	}
+
+	if (IsClanDead("ORG_HUNTERS"))
+	{
+		Dialog("TS_L1_Q2_2");
+		SetVar("G5_CONVICTED", GetVar("G5_CONVICTED")+1);
+		SetMechClan("TS_GRP_ARHHAND", "ORG_PLAYER");
+		SetVar("AIM.ARHHAND.CONVICTED");
+		
+		SetQuestPart("TS_L1_J_Q2_1", "TS_L1_J_Q2_3");
+		MarkMsgJ("TS_L1_J_Q2_1", 2);
+	}
+	else
+	{
+		if (GetVar("ARHHAND.1"))
+			MechSay(cMech, "TS_L1_Q2_3");
+	}
+
+	if (!GetVar("ARHHAND.1"))
+		SetVar("ARHHAND.1");
+}
+
+void proc OnTalk(char cMech)
+{
+   if (GetMechClan(cMech)!="ORG_PLAYER")
+	   MechSay(cMech, "MSG_M5_TALK");
+   else
+	   MechSay(cMech, "MSG_5GEN_AFTER_PER");
+}
+
+void proc OnView(char cMech)
+{
+   SetRelation(cMech, "PLAYER", 0, 0);
+}

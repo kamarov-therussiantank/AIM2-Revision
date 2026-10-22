@@ -1,0 +1,11 @@
+#include "include\AIM.src"
+
+void proc OnBuildStop(char cBuild)
+{
+	if (GetVar("AIM.MERC.ISQ") && GetVarChar("AIM.MERC.ACTQ")== "T_L5_MERC_05" 
+		&& cBuild == "B_L5_BASE5")
+	{
+		SetVar("T_L5_MERC_05_fail", 1);
+		Text("Q_FAILED");
+	}
+}

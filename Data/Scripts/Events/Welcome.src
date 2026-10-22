@@ -1,0 +1,217 @@
+#include "include\AIM.cpp"
+
+void proc OnEnterBuild(char item)
+{
+
+		char sBuild;
+		sBuild = GetVarChar("CurrentBuild");
+		switch (sBuild)
+		{
+			case "B_L2_TUNNEL": SetBuildOwner("B_L2_BUNKER", "ORG_SENTINELS");
+			case "B_L11_TUNNEL": SetBuildOwner("B_L11_ARLINGLAB", "ORG_RECONERS");
+			//case "B_L2_BUNKER": Text("S_ARENA_ENTER")
+		}
+
+	int typebuild;
+	typebuild = GetBuildType(item);
+	switch(typebuild)
+		{
+			case 0:		Text("S_BUNKER");
+			case 1:
+			{
+				int iSubType;
+				iSubType = GetBuildSubType(item);
+				if (iSubType==0) Text("S_BASE");
+				if (iSubType==1) Text("S_BASE_SPHERE");
+			}
+
+			case 2:
+			{
+				int iSubType;
+				iSubType = GetBuildSubType(item);
+				if (iSubType==0) Text("S_RECYCLE");
+				if (iSubType==1) Text("S_PF");
+				if (iSubType==2) Text("S_RM");
+			}
+			
+			case 11:
+			{
+				int iSubType;
+				iSubType = GetBuildSubType(item);
+				if (iSubType==0) Text("S_LAB");
+				if (iSubType==1) Text("S_ARENA_ENTRANCE");
+				if (iSubType==1) Text("S_ARENA_LEAVE");
+				if (iSubType==1) Text("S_ARENA_CHALLANGE");
+			}
+			
+			case 12:	   Text("S_FEEDSTOCK");
+			case 9:	   Text("S_IK");
+			case 6:	   Text("S_CHARGE");
+			case 8:	   Text("S_ARENA");
+			
+			case 5:
+			{
+				Text("S_KA");
+				return;
+			}
+			
+			case 3:		
+				{
+					Text(item);
+					Text("S_TUNNEL");
+					
+					if (GetVar("gen_q")!=0)
+						Text("GEN_DECLINE_TUNNEL");
+						
+					if (GetRating(RATING_WAR)<3)
+					   {
+						Text("INT_TUNNEL_ACCESS_DENIDED");
+					   }
+					
+					if (GetRating(RATING_WAR)>=3)
+					   {
+						 DeleteText("INT_TUNNEL_ACCESS_DENIDED");
+						 Text("INT_TUNNEL_ACCESS");					   }
+						}
+				
+			case 20:
+			{
+				Text("S_ENTRANCE");
+				if ( GetVar("AIM.UNDER.ACCESS"))
+					Text("S_MINE_1");
+				else
+					Text("S_MINE_2");
+				return;
+			}
+			
+			case 15:
+			{
+				Text("S_MINE");
+				
+				// Handle accessing to the underground - no more early accesses to other sectors
+				if (GetRating(RATING_WAR)<6)
+					   {
+						Text("INT_UNDERGROUND_ACCESS_DENIED");
+					   }
+				
+				if (GetRating(RATING_WAR)>=6)
+					{
+					DeleteText("INT_UNDERGROUND_ACCESS_DENIED");
+				if (item=="B_L1_MINE1" ||
+					item=="B_L2_MINE1" ||
+					item=="B_L5_MINE1" ||
+					item=="B_L6_MINE1")
+					{
+						if ( GetVar("AIM.UNDER.ACCESS"))
+							Text("S_MINE_1");
+						else
+							Text("S_MINE_2");
+					}
+					else
+						Text("S_MINE_3");
+			}
+		  }
+		} //end switch
+		
+	if (typebuild==3)
+	{
+	
+		if (GetHoldMech()>0)
+			Text("INT_TUNNEL_MINDS");
+		return;
+	}
+
+	char sOwner;
+	sOwner = GetBuildOwner(item);
+		
+	if (sOwner=="ORG_NONE" ||
+		sOwner=="")
+		Text("S_NOCLAN");
+	else
+	if (sOwner=="ORG_PLAYER")
+		Text("S_MYCLAN");
+	else
+		Text("S_WITHCLAN");
+		
+	if ( sOwner!="ORG_PLAYER" &&
+		 sOwner!=GetMechClan("PLAYER") &&
+		 GetMechClan("PLAYER")=="ORG_PLAYER" &&
+		 sOwner!="ORG_FREE" &&
+		 sOwner!="ORG_NONE" &&		 
+		 sOwner!="")
+	{
+		 if (GetClanRelation("ORG_PLAYER", sOwner)>-3)
+		 {
+			 Text("S_ENTERCLAN");
+			 CloseText("S_ENTERCLAN");
+		 }
+	}
+}
+
+void proc In()
+{
+	DeleteText("S_ENTERCLAN");
+	Text("S_CLAN_ENTERED");
+	char sOrg;
+	sOrg = GetBuildOwner(GetVarChar("CurrentBuild"));
+	// SetMechClan("PLAYER", sOrg);
+	SetClanRelation("ORG_PLAYER", item, 100);
+	// Text("S_LEAVECLAN");
+	// SetTimer("Out", 12, sOrg);
+}
+
+void proc Out(char item)
+{
+	// DeleteText("S_LEAVECLAN");
+	Text("S_CLAN_LEAVED");
+	SetMechClan("PLAYER", "ORG_PLAYER");
+	SetClanRelation("ORG_PLAYER", item, 3);
+} //end proc
+
+
+// Спуск в подземные коммуникации
+void proc GetDown()
+{
+	char sLoc;
+	sLoc = "";
+	char sBuild;
+	sBuild = GetVarChar("CurrentBuild");
+	switch (sBuild)
+	{
+		case "B_L1_MINE1": sLoc = "station_01";
+		case "B_L2_MINE1": sLoc = "station_02";
+		case "B_L3_ENTRANCE": sLoc = "station_03";
+		case "B_L5_MINE1": sLoc = "station_05";
+		case "B_L6_MINE1": sLoc = "station_06";
+		case "B_L9_ENTRANCE": sLoc = "station_21";
+		case "B_L10_ENTRANCE": sLoc = "location12";
+	}
+	
+	if (sLoc!="")
+	{
+		MoveToLocation(sLoc);
+		PlayVideo("Data\Video\down.bik");
+	}
+}
+
+void proc EnterArena()
+{
+		MoveToLocation("ARENA", "B_ARENA_HANGAR1");
+		PlayVideo("Data\Video\down.bik");
+}
+
+void proc LeaveArena()
+{
+		MoveToLocation("location2", "B_L2_BUNKER");
+		PlayVideo("Data\Video\down.bik");
+}
+
+void proc ChallengeOpponent(char item)
+{
+		StartScriptEvent("Locations\ARENA.src", "SpawnArenaEnemy", item);
+		DeleteText("S_ARENA_CHALLANGE");
+}
+
+
+
+

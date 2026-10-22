@@ -1,0 +1,19 @@
+#include "include\AIM.src"
+
+void proc OnBuildCapture(char clanID, char BuildID)
+{
+//-----------------------------выполнение квеста T_L5_MERC_04----------------------//
+	if (GetVar("AIM.MERC.ISQ") && GetVarChar("AIM.MERC.ACTQ")=="T_L5_MERC_04" 
+		&& clanID == "ORG_FINDERS" && GetArea() == "location5")
+	{
+		SetVar("T_L5_MERC_04_fail", 1);
+		Text("Q_FAILED");
+	}
+//-----------------------------выполнение квеста T_L3_ARHEYS_04----------------------//
+	if (GetVar("AIM.ARH.ISQ") && GetVarChar("AIM.ARH.ACTQ")=="T_L3_ARHEYS_04" 
+		&& clanID == "ORG_ARHEYS" && GetArea() == "location10")
+	{
+		SetVar("T_L3_ARHEYS_05_compl", 1);
+		Text("Q_COMPLETE");
+	}
+}

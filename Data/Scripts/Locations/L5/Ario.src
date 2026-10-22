@@ -1,0 +1,127 @@
+#include "include\AIM.cpp"
+
+void proc OnView(char glID)
+{	
+	if (GetMechClan("PLAYER")!="ORG_PLAYER")
+		return;
+		
+	if (!GetVar("AIM.ARIO.TS.1"))
+	{
+		MechSay("TS_GRP_ARIO", "TS_L5_Q3_0");
+		SetRelation("TS_GRP_ARIO", "PLAYER", 10);
+		SetMechClan("PLAYER", "ORG_PLAYER");
+		SetClanLider("ORG_PLAYER", "PLAYER");
+		AssignGliderToPlayer("TS_GRP_ARIO", 1);
+	}
+}
+
+void proc OnClusterMech(char cMech)
+{
+	if (!GetVar("AIM.ARIO.CLUSTER"))
+	{
+		SetEconomics("ORG_PLAYER", 10000, 1);
+		Dialog("TS_L5_Q5_0_ARIO");
+		SetCaptureInterface(1);
+		SetQuestPart("TS_L5_J_Q3_3", "TS_L5_J_Q3_3_2");
+		MarkMsgJ("TS_L5_J_Q3_3", 2);
+	}
+}
+
+void proc EndArio()
+{
+	if (!GetVar("AIM.ARIO.CLUSTER"))
+	{
+		 SetMsgJ("TS_L5_Q5_0_ARIO_1");
+		 SetCaptureInterface(0);
+		 SetVar("AIM.ARIO.CLUSTER");
+	}
+}
+
+void proc EndDialog()
+{
+	SetMsgJ("TS_L5_J_Q3_3");
+	MarkMsgJ("TS_L5_J_Q3_3", 1);
+	MarkMsgJ("TS_L5_J_Q1_7_2", 2);
+	SetQuestPart("TS_L5_J_Q1_7_2", "TS_L5_J_Q1_7_21");
+
+	SetCaptureInterface(0);
+}
+
+void proc EndDialog3()
+{
+		SetMsgJ("TS_L5_J_Q3_1");
+		MarkMsgJ("TS_L5_J_Q3_1", 1);
+		SetQuestPart("TS_L5_J_Q1_7_2", "TS_L5_J_Q1_7_21");
+		MarkMsgJ("TS_L5_J_Q1_7_2", 2);
+		SetCaptureInterface(0);		
+}
+
+void proc OnTalk(char cMech)
+{
+	if (GetMechClan("PLAYER")!="ORG_PLAYER")
+		return;
+
+	if (GetVar("AIM.ARIO.CONVICTED")) return;
+	
+	if (GetVar("AIM.ARIO.READY"))
+	{
+		SetMechClan("TS_GRP_ARIO", "ORG_PLAYER");
+		SetVar("G5_CONVICTED", GetVar("G5_CONVICTED")+1);
+		SetVar("AIM.ARIO.CONVICTED");
+		SetQuestPart("TS_L5_J_Q3_3", "TS_L5_J_Q3_3_1");
+		return;
+	}
+	 
+	// Если клан уже был создан, то сразу убивается
+	if (GetVar("AIM.CLAN.CREATE") && !GetVar("ARIO.TS.2") 
+	   && GetMechClan("TS_GRP_ARIO")!="ORG_PLAYER" )
+	{
+		SetCaptureInterface(1);
+		Dialog("TS_L5_Q3_3");
+		SetVar("AIM.ARIO.TS.1");
+		SetVar("AIM.ARIO.TS.2");
+		AssignGliderToPlayer("TS_GRP_ARIO", 0);	
+		DamageGlider("TS_GRP_ARIO", 100000);
+		SetVar("AIM.ARIO.READY");
+	}
+	else
+	// При первой встрече с игроков Арио произносит речь 
+	if (!GetVar("AIM.ARIO.TS.1"))
+	{
+		Dialog("TS_L5_Q3_1");
+		AssignGliderToPlayer("TS_GRP_ARIO", 0);	
+		SetVar("AIM.ARIO.TS.1");
+		SetCaptureInterface(1);
+	}
+	else
+	// После первого разговора, но до самоубиения арио
+	if (!GetVar("ARIO.TS.2"))
+	{
+		if (GetHoldMech("ORG_PLAYER")>=9)
+		{
+			SetVar("AIM.ARIO.READY");			
+			if (IsKilled(cMech))
+			{
+				OnTalk(cMech);
+			}
+			else
+			{
+				Dialog("TS_L5_TEXT5_1");
+				DamageGlider("TS_GRP_ARIO", 100000);
+			}
+			SetQuestPart("TS_L5_J_Q3_1", "TS_L5_J_Q3_2");
+		}
+		else
+			MechSay("TS_GRP_ARIO", "TS_L5_TEXT5_2");
+	}
+	else
+	   if (GetMechClan(cMech)!="ORG_PLAYER")
+		   MechSay(cMech, "MSG_M5_TALK");
+	   else
+		   MechSay(cMech, "MSG_5GEN_AFTER_PER");
+}
+
+void proc OnTryConvict(char cMech)
+{
+	OnTalk(cMech);
+}

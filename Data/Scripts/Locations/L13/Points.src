@@ -1,0 +1,18 @@
+#include "include\AIM.src"
+
+void proc OnEnterSensor(char item)
+{
+	// Если у игрока есть ключ к заводу.
+	if (/*GetItem("TS_ITEM1")==1 &&*/ !GetVar("AIM.UNDERPLANT"))
+	{
+		Dialog("TS_L13_Q1_1");
+		SetCaptureInterface(1);
+		SetVar("AIM.UNDERPLANT");
+	}
+}
+
+void proc EndDialog()
+{
+	SetCaptureInterface(0);
+	SetQuestPart("TS_L5_J_Q1_1", "TS_L13_J_Q1_1");
+}

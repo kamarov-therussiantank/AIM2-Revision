@@ -1,0 +1,291 @@
+#include "include\AIM.src"
+
+// AIM.RECK.ACTIVE		- есть ли задание?
+// AIM.RECK.QUEST		- текущий квест считающих
+// AIM.RECK.QUEST.NUM	- текущий номер квеста
+
+// "AIM.RECT01."+sensor
+// "AIM.RECT01.NUM"
+
+// ƒл€ 2-го квеста:
+// "AIM.RECK02."+sArea  - все локации
+// "AIM.RECK02.NUM"		- количество просмотренных локаций
+
+// "AIM.RECK03."+sArea  - все локации
+// "AIM.RECK03.NUM"		- количество просмотренных локаций
+
+// "AIM.RECK04."+Mech   - сдали ли мы этого механоида
+// "AIM.RECK04.NUM"		- количество мехов
+
+// ƒл€ 5-го квеста..
+// "AIM.RECK05.GET"			- 5-е задание получено	
+// "AIM.RECK05.LAB"			- 5-е полетели
+// "AIM.RECK05.COMPLETE"	- 5-е задание выполнено
+
+void proc GetNextTask()
+{
+	int qNum;
+	qNum = GetVar("AIM.RECK.QUEST.NUM");
+	switch(qNum) 
+	{
+		case 0: Quest("T_L11_RECKONERS_03");
+		case 3: Quest("T_L11_RECKONERS_01");
+		case 1: Quest("T_L11_RECKONERS_02");
+		case 2: Quest("T_L11_RECKONERS_04");
+	} 
+	Quest("T_L11_RECKONERS_02");
+}
+
+void proc CheckQuest(char QuestID)
+{ 
+	switch(QuestID)
+	{
+		// ѕосетить все танки 
+		case "T_L11_RECKONERS_01":
+		{
+			if (GetVar("AIM.RECK01.NUM") >= 3)
+			{
+				CompleteQuest(QuestID);
+				Text(QuestID+".COMPL");
+				AddItem("MDF_GUN_COURR_05");
+				SetVar("AIM.RECK.ACTIVE", 0);
+				SetVar("AIM.RECK.QUEST.NUM", 1);
+				GetNextTask();
+			}else
+			Text(QuestID+".NOTEND");
+		}
+		// ѕосетить все силовые пол€
+		case "T_L11_RECKONERS_02": 
+		{
+			if (GetVar("AIM.RECK02.NUM") >= 7)
+			{
+				CompleteQuest(QuestID);
+				Text(QuestID+".COMPL");
+				SetVar("AIM.RECK.ACTIVE", 0);
+				RemoveItem("TOV_T2_L11_CRYSTAL");
+				AddItem("MDF_GLR_COURR_05");
+				GetNextTask();
+			}
+			else
+			Text(QuestID+".NOTEND");
+		}
+	   
+		// ѕосетить все климат-активаторы
+		case "T_L11_RECKONERS_03": 
+		{
+			if (GetVar("AIM.RECK03.NUM") >= 6)
+			{
+				Text(QuestID+".COMPL");
+				CompleteQuest(QuestID);
+				SetVar("AIM.RECK.ACTIVE", 0);
+				RemoveItem("TOV_T3_L11_CRYSTAL");
+				AddItem("MDF_SHF_COURR_05");
+				GetNextTask();
+			}
+			else
+			Text(QuestID+".NOTEND");
+		}
+	   
+		// Ќайти всех 4-го поколени€..
+		case "T_L11_RECKONERS_04": 
+		{
+			if (GetVar("AIM.RECK04.NUM") >= 4) 
+			{
+				CompleteQuest(QuestID);
+				SetVar("AIM.RECK.ACTIVE", 0);
+				AddItem("MDF_ENG_TRADE_05", 2);
+				AddItem("MDF_RCR_TRADE_05", 2);
+				GetNextTask();
+			}
+			else
+			Text(QuestID+".NOTEND");
+		}
+
+		// Ћаборатори€
+		case "T_L11_RECKONERS_05":
+		{
+			// ≈сли у нас готов кластер в обелисе или в бункере супера
+			// то задание завершено...
+			if (GetVar("AIM.OBELISK.3") ||
+				GetVar("AIM.SBUNKER.12"))
+			{
+				Text(QuestID+".COMPL");
+			}
+			else
+				Text(QuestID+".NOTEND");
+		}
+	}
+
+	// ќбнул€ем квест, если мы его выполнили
+	if (!GetVar("AIM.RECK.ACTIVE")) SetVarChar("AIM.RECK.QUEST", "");
+} //end proc CheckQuest
+
+
+void proc OnEnterBuild(char item)
+{
+	// ≈сли задание есть, то провер€ем его выполнение
+	if (GetVar("AIM.RECK.ACTIVE") == 1) 
+		CheckQuest(GetVarChar("AIM.RECK.QUEST"));
+	else
+	// если задани€ нет, то пытаемс€ выдать другое. 
+		GetNextTask();
+
+	//5-е задание - отдельно
+	if (!GetVar("AIM.RECK05.GET"))
+		Quest("T_L11_RECKONERS_05");
+	else
+	if (!GetVar("AIM.RECK05.COMPLETE"))
+	{
+		if (GetVar("AIM.RECK05.LAB"))
+		{
+			Text("T_L11_RECKONERS_05.C1");
+			SetVar("AIM.RECK05.COMPLETE");
+			CompleteQuest("T_L11_RECKONERS_05");
+			PopConfig();
+		}
+		else
+			CheckQuest("T_L11_RECKONERS_05");
+	}
+}
+
+//---------¬водим переменные вли€ющие на текст задани€ до вывода текста например награда-------------//
+void proc take_quest(char item)
+{
+	switch(item)
+	{
+		case "T_L11_RECKONERS_01":
+		{
+			SetVar("reck_award", 5000);
+		}
+		case "T_L11_RECKONERS_02":
+		{	
+			SetVar("reck_award", 5000);
+		}
+		case "T_L11_RECKONERS_03":
+		{
+			SetVar("reck_award", 5000);
+		}
+		case "T_L11_RECKONERS_04":
+		{
+			SetVar("reck_award", 5000);
+		}
+		case "T_L11_RECKONERS_05":
+		{
+			SetVar("reck_award", 5000);
+		}
+		case "T_L11_RECKONERS_07":
+		{
+			SetVar("reck_award", 5000);
+		}
+	}//end switch
+	
+	if (item!="T_L11_RECKONERS_05")
+		SetVarChar("AIM.RECK.QUEST", item);
+}//end proc
+
+//-------ѕри нажатии на текст задани€ в правом верхнем окошке срабатывает эта функци€---///
+
+void proc OnQuest(char item)
+{
+	SetVarChar("AIM.RECK.CQ", item);
+	RemoveQuest(item);
+	take_quest(item);
+	Text(item+".TASK");
+	DeleteText("T_ACCEPT");	
+	DeleteText("GEN_ACCEPT");
+	if (GetVar("AIM.TESTING"))
+	   Text("GEN_ACCEPT");
+	else
+	   Text("T_ACCEPT");
+}//end proc
+
+void proc NO()
+{
+   char reckQ;
+   reckQ = GetVarChar("AIM.RECK.CQ");
+   DeleteText("GEN_ACCEPT");
+   DeleteText(reckQ+".TASK");
+
+   RemoveQuest(reckQ);
+
+   switch(reckQ)
+   {
+		case "T_L11_RECKONERS_01":
+			SetVar("AIM.RECK.QUEST.NUM", 1);
+		case "T_L11_RECKONERS_02":
+			SetVar("AIM.RECK.QUEST.NUM", 2);
+		case "T_L11_RECKONERS_03":
+			SetVar("AIM.RECK.QUEST.NUM", 3);
+		case "T_L11_RECKONERS_04":
+			SetVar("AIM.RECK.QUEST.NUM", 4);
+	}
+	GetNextTask();
+}
+
+//-----ѕосле вывода текста, если в тексте выбрали согласие на выполнение задани€ тогда эта функци€----///
+void proc YES()
+{
+	DeleteText("GEN_ACCEPT");	
+	DeleteText("T_ACCEPT");
+		
+	char reckQ;
+	reckQ = GetVarChar("AIM.RECK.CQ");
+	SetQuest(reckQ, reckQ+".JOURNAL", GetVar("reck_award"));
+	CloseText(reckQ+".TASK");
+	Text(reckQ+".GET");
+
+	switch(reckQ)
+	{
+		case "T_L11_RECKONERS_01":
+			{
+				SetVar("AIM.RECK.QUEST.NUM", 1);
+			}
+		// ѕосетить все силовые пол€..
+		case "T_L11_RECKONERS_02":
+		{
+			AddItem("TOV_T2_L11_CRYSTAL");
+			SetVar("AIM.RECK.QUEST.NUM", 2);
+		}
+		case "T_L11_RECKONERS_03":
+		{
+			AddItem("TOV_T3_L11_CRYSTAL");
+			SetVar("AIM.RECK.QUEST.NUM", 3);
+		}
+		case "T_L11_RECKONERS_04":
+		{
+			SetVar("AIM.RECK.QUEST.NUM", 4);
+		}
+		case "T_L11_RECKONERS_05":
+		{
+			SetVar("AIM.RECK05.GET");
+			//AddItem("TOV_T5_L11_ZAPROS", 1);
+		}
+	} //end switch
+			
+	if (reckQ!="T_L11_RECKONERS_05")
+		SetVar("AIM.RECK.ACTIVE", 1);
+} //end proc
+
+// переход в секретную лабораторию.
+void proc GO_LOC14()
+{
+	SetVar("AIM.RECK05.LAB");
+	PushConfig("CFG_BOT");
+	MoveToLocation("lab");
+//	SetVar("AIM.RECK05.COMPLETE");
+}
+
+// ѕроверка 3-го задани€ в климат-активаторах
+void proc Task3Test(char buidID)
+{
+	char sArea;
+	sArea = GetArea();
+	char sID;
+	sID = "AIM.RECK03."+sArea;
+	if (GetVarChar(sID)=="")
+	{
+		SetVarChar(sID, "=green");
+		Text("MSG_T3_L11_KA_REACTION");
+		SetVar("AIM.RECK03.NUM", GetVar("AIM.RECK03.NUM")+1);
+	}
+}

@@ -1,0 +1,16 @@
+#include "include\AIM.cpp"
+
+void proc OnDie(char locationID)
+{
+	switch (locationID)
+	{
+   /* case "demo_map":
+		Resurrect("demo_map");*/
+	/*case "trainmap":
+	{
+		StartScriptEvent("Training\train.src", "OnResurrect");
+		Resurrect("trainmap");
+	}*/
+	}
+	PlayVideo("Data\Video\Die.bik");
+}

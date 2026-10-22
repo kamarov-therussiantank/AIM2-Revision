@@ -1,0 +1,21 @@
+#include "include\AIM.cpp"
+
+
+void proc OnEnterBuild(char item)
+{
+	StartScriptEvent("Events\EnterBuild.src", "OnEnterBuild", item);
+
+	if (item == "B_L5_PLANT_RM" && GetItem("TOV_T_L5_MERC_06_IPAK02") != 0) 
+	{
+			Text("MSG_T_L5_MERC_06");
+			SetVar("T_L5_MERC_06_comp", GetVar("T_L5_MERC_06_comp")+1);
+			RemoveItem("TOV_T_L5_MERC_06_IPAK02", 1);
+			AddItem("TOV_T_L5_MERC_06_KON2");
+			
+			if (GetItem("TOV_T_L5_MERC_06_IPAK01"))
+				SetPelengPoint("B_L5_PLANT_PF");
+			else
+				SetPelengPoint("B_L5_BASE2");
+				
+	}
+}

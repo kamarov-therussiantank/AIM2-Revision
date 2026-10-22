@@ -1,0 +1,16 @@
+#include "include\AIM.cpp"
+
+void proc OnEnterBuild(char item)
+{
+	StartScriptEvent("Events\EnterBuild.src", "OnEnterBuild", item);
+	if (!IsLocKey("location6") && !IsLocKey("location9") && !IsLocKey("location11") && !GetVar("AIM.TUNNEL.W")) 
+	{
+		Text("TS_L5_Q1_8");   
+		SetMsgJ("TS_L5_J_Q1_8");
+		SetVar("AIM.TUNNEL.W", 1);
+	}
+
+	// тут по идее надо проверить а нет ли у игрока механоидов в трюме и вывести сообщение
+	// соответсвующее
+	
+}

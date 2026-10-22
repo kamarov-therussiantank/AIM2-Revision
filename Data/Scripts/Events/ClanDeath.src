@@ -1,0 +1,15 @@
+#include "include\AIM.cpp"
+
+void proc OnClanDeath(char clanID)
+{
+	StartScriptEvent("Clans\Events\ClanDeath.src", "OnClanDeath", clanID);
+	//..
+	
+	if (!GetVar("DEMO"))
+	{
+		if (clanID=="ORG_FIREHALF" && GetVar("ARHHAND.1"))
+		{
+			SetQuestPart("TS_L1_J_Q2_1", "TS_L1_J_Q2_2");
+		}		  
+	}
+}
