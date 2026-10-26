@@ -20,6 +20,12 @@ A custom Direct3D 8-to-Direct3D 9 wrapper created just for A.I.M. 2: Clan Wars, 
 
 Created with: https://github.com/crosire/d3d8to9
 
+## fix.bat
+
+A script created to fix game crashes, can be found in **_bat_** directory, copy it and paste it in game directory, not in **_Data_** directory! make a shortcut to it on desktop and next time you want to run the game without facing crashes, run that shortcut. 
+
+Created with: https://github.com/crosire/d3d8to9
+
 ## How to load A.I.M. 2 - Revision
 
 - [Download ZIP](https://github.com/kamarov-therussiantank/AIM2-Revision/archive/refs/heads/main.zip)
